@@ -1,0 +1,8 @@
+#!/media/brasammy/5B6DAD9B6A1F7E40/Projects/Thesis/Main/Final_work/thesis/myenv/bin/python
+# -*- coding: utf-8 -*-
+import re
+import sys
+from cmdstanpy.install_cmdstan import __main__
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(__main__())

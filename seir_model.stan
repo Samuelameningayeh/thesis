@@ -70,14 +70,14 @@ transformed parameters{
 
 model {
   // Priors
-  beta ~ lognormal(log(0.3), 0.5);      // Infection rate prior
-  sigma ~ lognormal(log(1/5.0), 0.3);   // Prior mean: 5-day incubation period
+  beta ~ lognormal(log(0.3), 0.2);      // Infection rate prior
+  sigma ~ lognormal(log(0.3), 0.1);   // Prior mean: 5-day incubation period
   gamma ~ lognormal(log(1/7.0), 0.3);   // Prior mean: 7-day infectious period
   phi_inv ~ exponential(5);             // Dispersion parameter
   rho ~ beta(2, 2);   
 
   // Likelihood: observed infected ~ Poisson(I)
-  cases ~ neg_binomial_2(incidence, phi);
+  cases ~ neg_binomial_2(rho*incidence, phi);
 }
 
 generated quantities {
@@ -88,6 +88,6 @@ generated quantities {
   array[T] real predicted_cases; // Predicted number of observed cases
   //predicted_cases = neg_binomial_2_rng(incidence, phi);
   for (i in 1:T)
-    predicted_cases[i] = neg_binomial_2_rng(incidence[i], phi);
+    predicted_cases[i] = neg_binomial_2_rng(rho*incidence[i], phi);
 
 }

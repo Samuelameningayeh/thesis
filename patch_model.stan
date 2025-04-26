@@ -1,0 +1,118 @@
+functions {
+  vector seir(real t, vector y, array[] real theta, array[] real x_r, array[] int x_i) {
+    int p = x_i[1]; // Patch index
+    int N = x_i[2]; // Population size for patch p
+    
+    real sigma = theta[1]; // Estimated
+    real gamma = theta[2]; // Estimated
+    real beta = theta[2 + p]; // Patch-specific beta
+    
+    real S = y[1];
+    real E = y[2];
+    real I = y[3];
+    real R = y[4];
+    
+    vector[5] dydt;
+    dydt[1] = -beta * I * S / N;              // dS/dt
+    dydt[2] = beta * I * S / N - sigma * E;   // dE/dt
+    dydt[3] = sigma * E - gamma * I;          // dI/dt
+    dydt[4] = gamma * I;                      // dR/dt
+    dydt[5] = sigma * E;                      // Cumulative incidence
+    
+    return dydt;
+  }
+}
+
+data {
+  int<lower=1> P;               // Number of patches (3: Guinea, Liberia, Sierra Leone)
+  int<lower=1> T;               // Number of time points
+  real t0;                      // Initial time
+  array[T] real ts;             // Observation times
+  array[T, P] int<lower=0> cases; // Weekly incidence for each patch
+  array[P] int N;               // District population sizes
+}
+
+transformed data {
+  array[0] real x_r;
+}
+
+parameters {
+  real<lower=0> sigma;          // Progression rate (1/incubation period)
+  real<lower=0> gamma;          // Recovery rate (1/infectious period)
+  array[P] real<lower=0> beta;  // Patch-specific transmission rates
+  real<lower=0> phi_inv;        // Inverse dispersion parameter
+  array[P] real<lower=0, upper=1> rho; // Patch-specific reporting rates
+  array[P] real<lower=0> E0;    // Initial exposed
+  array[P] real<lower=0> I0;    // Initial infected
+}
+
+transformed parameters {
+  array[P] vector[5] y0;              // Initial state: [S, E, I, R, CumInc]
+  array[T, P] real incidence;
+  real<lower=0> phi = 1.0 / phi_inv;
+  array[2 + P] real theta;
+  
+  // Set theta for ODE
+  theta[1] = sigma;
+  theta[2] = gamma;
+  for (p in 1:P) {
+    theta[2 + p] = beta[p];     // Patch-specific beta
+  }
+  
+  // Set initial conditions
+  for (p in 1:P) {
+    y0[p, 1] = N[p] - E0[p] - I0[p]; // S(0)
+    y0[p, 2] = E0[p];                // E(0)
+    y0[p, 3] = I0[p];                // I(0)
+    y0[p, 4] = 0;                    // R(0)
+    y0[p, 5] = 0;                    // Cumulative incidence
+  }
+  
+  // Solve ODE for each patch
+  for (p in 1:P) {
+    array[2] int x_i = {p, N[p]};            // Pass patch index and population
+    array[T] vector[5] y_pred_p = ode_rk45(seir, y0[p], t0, ts, theta, x_r, x_i);
+    
+    // Compute incidence for patch p
+    incidence[1, p] = y_pred_p[1, 5] - 0;
+    for (t in 2:T) {
+      incidence[t, p] = y_pred_p[t, 5] - y_pred_p[t-1, 5];
+    }
+    for (t in 1:T) {
+      incidence[t, p] = rho[p] * incidence[t, p];
+    }
+  }
+}
+
+model {
+  // Priors
+  sigma ~ lognormal(log(1.0/5.3), 0.2); // Centered on 1/5.3 (Faye et al., 2015)
+  gamma ~ lognormal(log(1.0/5.0), 0.2); // Centered on 1/5 (Faye et al., 2015)
+  for (p in 1:P) {
+    beta[p] ~ lognormal(log(0.3), 0.2);
+    rho[p] ~ beta(2, 2);
+    E0[p] ~ lognormal(log(1), 0.5); // Tighter for districts
+    I0[p] ~ lognormal(log(1), 0.5); // Tighter for districts
+  }
+  phi_inv ~ exponential(5);
+  
+  // Likelihood
+  for (p in 1:P) {
+    cases[:, p] ~ neg_binomial_2(incidence[:, p], phi);
+  }
+}
+
+generated quantities {
+  array[P] real R0;                     // Basic reproduction number
+  array[T, P] real predicted_cases;     // Predicted cases
+  
+  for (p in 1:P) {
+    R0[p] = beta[p] / gamma;           // R0 = beta / gamma
+  }
+  
+  for (p in 1:P) {
+    for (t in 1:T) {
+      predicted_cases[t, p] = neg_binomial_2_rng(incidence[t, p], phi);
+    }
+  }
+}

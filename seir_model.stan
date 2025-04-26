@@ -59,6 +59,7 @@ transformed parameters{
   array[3] real theta = {beta, sigma, gamma};
   array[T] vector[5] y_pred = ode_rk45(seir, y0, t0, ts, theta, x_r, x_i);
 
+  // number of incidence for a given time
   incidence[1] = y_pred[1, 5] - 0;
   for (i in 2:T)
     incidence[i] = y_pred[i, 5] - y_pred[i-1, 5];

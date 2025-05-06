@@ -30,10 +30,21 @@ data {
   array[T] real ts;             // Observation times
   array[T, P] int<lower=0> cases; // Weekly incidence for each patch
   array[P] int N;               // District population sizes
+  array[P] real<lower=0> E0;    // Initial exposed
+  array[P] real<lower=0> I0;    // Initial infected
 }
 
 transformed data {
+  array[P] vector[5] y0;              // Initial state: [S, E, I, R]
   array[0] real x_r;
+  // Set initial conditions
+  for (p in 1:P) {
+    y0[p, 1] = N[p] - E0[p] - I0[p]; // S(0)
+    y0[p, 2] = E0[p];                // E(0)
+    y0[p, 3] = I0[p];                // I(0)
+    y0[p, 4] = 0;                    // R(0)
+    y0[p, 5] = 0;                    // Cumulative incidence
+  }
 }
 
 parameters {
@@ -41,13 +52,10 @@ parameters {
   real<lower=0> gamma;          // Recovery rate (1/infectious period)
   array[P] real<lower=0> beta;  // Patch-specific transmission rates
   real<lower=0> phi_inv;        // Inverse dispersion parameter
-  array[P] real<lower=0, upper=1> rho; // Patch-specific reporting rates
-  array[P] real<lower=0> E0;    // Initial exposed
-  array[P] real<lower=0> I0;    // Initial infected
+  array[P] real<lower=0, upper=1> rho;     // Patch-specific reporting rates
 }
 
 transformed parameters {
-  array[P] vector[5] y0;              // Initial state: [S, E, I, R, CumInc]
   array[T, P] real incidence;
   real<lower=0> phi = 1.0 / phi_inv;
   array[2 + P] real theta;
@@ -59,14 +67,6 @@ transformed parameters {
     theta[2 + p] = beta[p];     // Patch-specific beta
   }
   
-  // Set initial conditions
-  for (p in 1:P) {
-    y0[p, 1] = N[p] - E0[p] - I0[p]; // S(0)
-    y0[p, 2] = E0[p];                // E(0)
-    y0[p, 3] = I0[p];                // I(0)
-    y0[p, 4] = 0;                    // R(0)
-    y0[p, 5] = 0;                    // Cumulative incidence
-  }
   
   // Solve ODE for each patch
   for (p in 1:P) {
@@ -86,13 +86,13 @@ transformed parameters {
 
 model {
   // Priors
-  sigma ~ lognormal(log(1.0/5.3), 0.2); // Centered on 1/5.3 (Faye et al., 2015)
-  gamma ~ lognormal(log(1.0/5.0), 0.2); // Centered on 1/5 (Faye et al., 2015)
+  sigma ~ lognormal(log(1.0/5), 0.2); // Centered on 1/5.3 (Faye et al., 2015)
+  gamma ~ lognormal(log(1.0/10.0), 0.3);
   for (p in 1:P) {
     beta[p] ~ lognormal(log(0.3), 0.2);
     rho[p] ~ beta(2, 2);
-    E0[p] ~ lognormal(log(1), 0.5); // Tighter for districts
-    I0[p] ~ lognormal(log(1), 0.5); // Tighter for districts
+    //E0[p] ~ lognormal(log(1), 0.5); 
+    //I0[p] ~ lognormal(log(1), 0.5); 
   }
   phi_inv ~ exponential(5);
   

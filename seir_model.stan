@@ -73,7 +73,7 @@ model {
   // Priors
   beta ~ lognormal(log(0.3), 0.2);      // Infection rate prior
   sigma ~ lognormal(log(1.0 / 5), 0.2);   // Prior mean: 5-day incubation period
-  gamma ~ lognormal(log(1/5.0), 0.3);   // Prior mean: 7-day infectious period
+  gamma ~ lognormal(log(1.0/10), 0.3);   // Prior mean: 7-day infectious period
   phi_inv ~ exponential(5);             // Dispersion parameter
   rho ~ beta(2, 2);
 

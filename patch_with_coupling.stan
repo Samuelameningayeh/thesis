@@ -1,21 +1,16 @@
 functions {
-  vector seir_patch(
-    real t, 
-    vector y, 
-    array[] real theta, 
-    array[] real x_r, 
-    array[] int x_i
+  vector seir_patch(real t, vector y, array[] real theta,array[] real x_r, array[] int x_i
   ) {
     int P = x_i[1];               // Number of patches
-    array[P] int N = x_i[2:P+1];  // Population sizes for each patch
+    array[P] int N = x_i[2:P+1];  // Population sizes
     
     real sigma = theta[1];        // Incubation rate
     real gamma = theta[2];        // Recovery rate
-    array[P] real beta = theta[3:2+P];  // Patch-specific transmission rates
+    array[P] real beta = theta[3:2+P];  // Transmission rates
     
-    // Mobility matrix (flattened P x P)
+    // Mobility matrix
     matrix[P, P] mobility;
-    int idx = 3 + P;  // Start index for mobility parameters
+    int idx = 2 + P + 1;
     for (i in 1:P) {
       for (j in 1:P) {
         mobility[i, j] = theta[idx];
@@ -23,53 +18,48 @@ functions {
       }
     }
     
-    vector[4 * P] dydt;  // Derivatives for S, E, I, R in all patches
+    vector[5 * P] dydt;  // Derivatives for S, E, I, R, C
     
     for (p in 1:P) {
-      real S_p = y[1 + 4*(p-1)];
-      real E_p = y[2 + 4*(p-1)];
-      real I_p = y[3 + 4*(p-1)];
-      real R_p = y[4 + 4*(p-1)];
+      real S_p = y[1 + 5*(p-1)];
+      real E_p = y[2 + 5*(p-1)];
+      real I_p = y[3 + 5*(p-1)];
+      real R_p = y[4 + 5*(p-1)];
+      real C_p = y[5 + 5*(p-1)];  // Cumulative infections
       
-      // Within-patch transmission
       real new_infections = beta[p] * S_p * I_p / N[p];
+      real new_infectious = sigma * E_p;  // Rate of new infectious cases
       
-      // Cross-patch mobility effects
-      real dS_in = 0.0;
-      real dE_in = 0.0;
-      real dI_in = 0.0;
-      real dR_in = 0.0;
-      real dS_out = 0.0;
-      real dE_out = 0.0;
-      real dI_out = 0.0;
-      real dR_out = 0.0;
+      real dS_in = 0.0, dE_in = 0.0, dI_in = 0.0, dR_in = 0.0, dC_in = 0.0;
+      real dS_out = 0.0, dE_out = 0.0, dI_out = 0.0, dR_out = 0.0, dC_out = 0.0;
       
       for (k in 1:P) {
         if (k != p) {
-          // Outflow from p to k
           dS_out += mobility[p, k] * S_p;
           dE_out += mobility[p, k] * E_p;
           dI_out += mobility[p, k] * I_p;
           dR_out += mobility[p, k] * R_p;
+          dC_out += mobility[p, k] * C_p;  // Cumulative infections move with mobility
           
-          // Inflow to p from k
-          real S_k = y[1 + 4*(k-1)];
-          real E_k = y[2 + 4*(k-1)];
-          real I_k = y[3 + 4*(k-1)];
-          real R_k = y[4 + 4*(k-1)];
+          real S_k = y[1 + 5*(k-1)];
+          real E_k = y[2 + 5*(k-1)];
+          real I_k = y[3 + 5*(k-1)];
+          real R_k = y[4 + 5*(k-1)];
+          real C_k = y[5 + 5*(k-1)];
           
           dS_in += mobility[k, p] * S_k;
           dE_in += mobility[k, p] * E_k;
           dI_in += mobility[k, p] * I_k;
           dR_in += mobility[k, p] * R_k;
+          dC_in += mobility[k, p] * C_k;
         }
       }
       
-      // ODEs for patch p
-      dydt[1 + 4*(p-1)] = -new_infections - dS_out + dS_in;  // dS/dt
-      dydt[2 + 4*(p-1)] = new_infections - sigma * E_p - dE_out + dE_in;  // dE/dt
-      dydt[3 + 4*(p-1)] = sigma * E_p - gamma * I_p - dI_out + dI_in;  // dI/dt
-      dydt[4 + 4*(p-1)] = gamma * I_p - dR_out + dR_in;  // dR/dt
+      dydt[1 + 5*(p-1)] = -new_infections + dS_in - dS_out;  // dS/dt
+      dydt[2 + 5*(p-1)] = new_infections - new_infectious + dE_in - dE_out;  // dE/dt
+      dydt[3 + 5*(p-1)] = new_infectious - gamma * I_p + dI_in - dI_out;  // dI/dt
+      dydt[4 + 5*(p-1)] = gamma * I_p + dR_in - dR_out;  // dR/dt
+      dydt[5 + 5*(p-1)] = new_infectious + dC_in - dC_out;  // dC/dt (cumulative infections)
     }
     
     return dydt;
@@ -77,7 +67,7 @@ functions {
 }
 
 data {
-  int<lower=1> P;               // Number of patches (3)
+  int<lower=1> P;               // Number of patches
   int<lower=1> T;               // Time points
   real t0;                      // Initial time
   array[T] real ts;             // Observation times
@@ -88,25 +78,26 @@ data {
 }
 
 transformed data {
-  array[4 * P] real y0;         // Initial state (S1, E1, I1, R1, ..., SP, EP, IP, RP)
-  array[0] real x_r;
+  array[5 * P] real y0;         // Initial state (S1, E1, I1, R1, C1, ..., SP, EP, IP, RP, CP)
+  array[0] real x_r;            // No real-valued auxiliary data
   array[P + 1] int x_i;         // x_i[1] = P, x_i[2:P+1] = N[1:P]
   
   x_i[1] = P;
   for (p in 1:P) {
     x_i[p + 1] = N[p];
-    y0[1 + 4*(p-1)] = N[p] - E0[p] - I0[p];  // S_p(0)
-    y0[2 + 4*(p-1)] = E0[p];                 // E_p(0)
-    y0[3 + 4*(p-1)] = I0[p];                 // I_p(0)
-    y0[4 + 4*(p-1)] = 0;                     // R_p(0)
+    y0[1 + 5*(p-1)] = fmax(0, N[p] - E0[p] - I0[p]);  // S_p(0)
+    y0[2 + 5*(p-1)] = E0[p];                          // E_p(0)
+    y0[3 + 5*(p-1)] = I0[p];                          // I_p(0)
+    y0[4 + 5*(p-1)] = 0;                              // R_p(0)
+    y0[5 + 5*(p-1)] = I0[p];                          // C_p(0) = initial infections
   }
 }
 
 parameters {
-  real<lower=0> sigma;          // Incubation rate (1/latent period)
+  real<lower=0> sigma;          // Incubation rate
   real<lower=0> gamma;          // Recovery rate
-  array[P] real<lower=0> beta;  // Patch-specific transmission rates
-  array[P, P] real<lower=0> mobility;  // Mobility matrix (asymmetric)
+  array[P] real<lower=0> beta;  // Transmission rates
+  array[P, P] real<lower=0> mobility;  // Mobility matrix
   real<lower=0> phi_inv;        // Inverse dispersion
   array[P] real<lower=0, upper=1> rho;  // Reporting rates
 }
@@ -114,7 +105,7 @@ parameters {
 transformed parameters {
   array[T, P] real incidence;
   real<lower=0> phi = 1.0 / phi_inv;
-  array[3 + P + P*P] real theta;  // theta = [sigma, gamma, beta[1:P], mobility[P, P]]
+  array[2 + P + P*P] real theta;  // theta = [sigma, gamma, beta[1:P], mobility[P, P]]
   
   theta[1] = sigma;
   theta[2] = gamma;
@@ -123,35 +114,26 @@ transformed parameters {
   }
   for (i in 1:P) {
     for (j in 1:P) {
-      theta[3 + P + (i-1)*P + j] = mobility[i, j];
+      theta[2 + P + (i-1)*P + j] = mobility[i, j];
     }
   }
   
-  // Solve ODE
-  array[T] vector[4 * P] y_pred = ode_rk45(
-    seir_patch, 
-    to_vector(y0), 
-    t0, 
-    ts, 
-    theta, 
-    x_r, 
-    x_i
-  );
+  // Solve ODE for all patches
+  array[T] vector[5 * P] y_pred = ode_rk45(seir_patch, to_vector(y0), t0, ts, theta, x_r, x_i);
   
-  // Compute incidence per patch
+  // Compute incidence from cumulative infections
   for (p in 1:P) {
+    print("Starting ODE for patch ", p);
+    incidence[1, p] = (y_pred[1, 5 + 5*(p-1)])* rho[p];  // No incidence at t0
     for (t in 2:T) {
-        incidence[t, p] = y_pred[t, 3 + 4 * (p - 1)] - y_pred[t - 1, 3 + 4 * (p - 1)];
-    }
-    for (t in 1:T) {
-        incidence[t, p] *= rho[p];  // Apply reporting rate element-wise
+      incidence[t, p] = (y_pred[t, 5 + 5*(p-1)] - y_pred[t-1, 5 + 5*(p-1)]) * rho[p];
     }
   }
 }
 
 model {
   // Priors
-  sigma ~ lognormal(log(1.0/5), 0.2);  // Ebola latent period ~5 days
+  sigma ~ lognormal(log(1.0/5), 0.2);  // Latent period ~5 days
   gamma ~ lognormal(log(1.0/10), 0.3); // Infectious period ~10 days
   for (p in 1:P) {
     beta[p] ~ lognormal(log(0.3), 0.2);
@@ -171,14 +153,13 @@ model {
 }
 
 generated quantities {
-  array[P] real R0; // Patch-specific R0
-  array[T, P] real predicted_cases; // Posterior predictive for observed time points
-
+  array[P] real R0;              // Patch-specific R0
+  array[T, P] real predicted_cases; // Posterior predictive
+  
   for (p in 1:P) {
-    R0[p] = beta[p] / gamma;           // R0 = beta / gamma
+    R0[p] = beta[p] / gamma;     // R0 = beta / gamma
   }
   
-  // --- Posterior predictive for observed data ---
   for (p in 1:P) {
     for (t in 1:T) {
       predicted_cases[t, p] = neg_binomial_2_rng(incidence[t, p], phi);

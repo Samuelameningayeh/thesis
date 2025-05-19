@@ -119,7 +119,7 @@ transformed parameters {
   }
   
   // Solve ODE for all patches
-  array[T] vector[5 * P] y_pred = ode_rk45(seir_patch, to_vector(y0), t0, ts, theta, x_r, x_i);
+  array[T] vector[5 * P] y_pred = ode_rk45(seir_patch,to_vector(y0), t0, ts,theta, x_r, x_i, max_num_steps = 1e6);
   
   // Compute incidence from cumulative infections
   for (p in 1:P) {

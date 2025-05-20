@@ -51,7 +51,7 @@ transformed data {
     y0[p, 3] = I0[p];                // I(0)
     y0[p, 4] = 0;                    // R(0)
     y0[p, 5] = 0;                    // D(0)
-    y0[p, 6] = 0;                    // Cumulative incidence
+    y0[p, 6] = 0;            // Cumulative incidence
   }
 }
 
@@ -78,21 +78,28 @@ transformed parameters {
     theta[3 + p] = beta[p];     // Patch-specific beta
   }
   
-  // Solve ODE for each patch
+  // Solve ODE for each patch and store S(t) for Rt calculation
+  array[T, P] real S;  // Susceptibles over time for each patch
+  
   for (p in 1:P) {
     array[2] int x_i = {p, N[p]};            // Pass patch index and population
     array[T] vector[6] y_pred_p = ode_rk45(seir, y0[p], t0, ts, theta, x_r, x_i);
     
-    // Compute incidence and predicted deaths for patch p
+    // Compute incidence, predicted deaths, and store S(t)
     incidence[1, p] = y_pred_p[1, 6];  // Initial cumulative incidence
     predicted_deaths[1, p] = y_pred_p[1, 5];  // Initial cumulative deaths
+    
+    S[1, p] = fmax(0.0001, y_pred_p[1, 1]);  // Initial S(t)
+
     for (t in 2:T) {
-      incidence[t, p] = y_pred_p[t, 6] - y_pred_p[t-1, 6];  // New infections
-      predicted_deaths[t, p] = y_pred_p[t, 5] - y_pred_p[t-1, 5];  // New deaths
+      incidence[t, p] = y_pred_p[t, 6] - y_pred_p[t-1, 6];         // New infections
+      predicted_deaths[t, p] = y_pred_p[t, 5] - y_pred_p[t-1, 5];       // New deaths
+      S[t, p] = fmax(0.00001, y_pred_p[t, 1]);  // S(t) for Rt
     }
+
     for (t in 1:T) {
-      incidence[t, p] = rho[p] * incidence[t, p];  // Adjust for case reporting
-      predicted_deaths[t, p] = rho_d[p] * predicted_deaths[t, p];  // Adjust for death reporting
+      incidence[t, p] = fmax(0.0001, rho[p] * incidence[t, p]);        // Adjust for case reporting
+      predicted_deaths[t, p] = fmax(0.0001, rho_d[p] * predicted_deaths[t, p]);      // Adjust for death reporting
     }
   }
 }
@@ -102,8 +109,9 @@ model {
   for (p in 1:P) {
     beta[p] ~ lognormal(log(0.3), 0.2);
     rho[p] ~ beta(2, 2);
-    rho_d[p] ~ beta(2, 2);  // Prior for death reporting rate
+    rho_d[p] ~ beta(2, 2);
   }
+
   phi_inv ~ exponential(5);
   phi_d_inv ~ exponential(5);
   
@@ -120,14 +128,14 @@ model {
 
 generated quantities {
   array[P] real R0;                     // Basic reproduction number
+  array[T, P] real Rt;                  // Effective reproduction number
   array[T, P] real predicted_cases;     // Predicted cases
   
   for (p in 1:P) {
     R0[p] = beta[p] / (gamma + alpha);  // R0 = beta / (gamma + alpha)
-  }
-  
-  for (p in 1:P) {
+    
     for (t in 1:T) {
+      Rt[t, p] = R0[p] * S[t, p] / N[p];  // Rt = R0 * S(t) / N
       predicted_cases[t, p] = neg_binomial_2_rng(incidence[t, p], phi);
     }
   }

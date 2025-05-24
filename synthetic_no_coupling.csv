@@ -1,0 +1,1351 @@
+time,country,cases
+0.0,Guinea,7
+1.0,Guinea,43
+2.0,Guinea,23
+3.0,Guinea,74
+4.0,Guinea,106
+5.0,Guinea,69
+6.0,Guinea,64
+7.0,Guinea,104
+8.0,Guinea,83
+9.0,Guinea,154
+10.0,Guinea,95
+11.0,Guinea,63
+12.0,Guinea,169
+13.0,Guinea,198
+14.0,Guinea,201
+15.0,Guinea,102
+16.0,Guinea,206
+17.0,Guinea,177
+18.0,Guinea,271
+19.0,Guinea,164
+20.0,Guinea,319
+21.0,Guinea,136
+22.0,Guinea,164
+23.0,Guinea,446
+24.0,Guinea,354
+25.0,Guinea,254
+26.0,Guinea,299
+27.0,Guinea,188
+28.0,Guinea,419
+29.0,Guinea,270
+30.0,Guinea,136
+31.0,Guinea,569
+32.0,Guinea,232
+33.0,Guinea,236
+34.0,Guinea,259
+35.0,Guinea,398
+36.0,Guinea,539
+37.0,Guinea,625
+38.0,Guinea,743
+39.0,Guinea,582
+40.0,Guinea,591
+41.0,Guinea,358
+42.0,Guinea,706
+43.0,Guinea,692
+44.0,Guinea,478
+45.0,Guinea,990
+46.0,Guinea,560
+47.0,Guinea,950
+48.0,Guinea,669
+49.0,Guinea,899
+50.0,Guinea,727
+51.0,Guinea,991
+52.0,Guinea,1041
+53.0,Guinea,840
+54.0,Guinea,1182
+55.0,Guinea,1519
+56.0,Guinea,910
+57.0,Guinea,910
+58.0,Guinea,1370
+59.0,Guinea,1542
+60.0,Guinea,1555
+61.0,Guinea,1824
+62.0,Guinea,2070
+63.0,Guinea,1441
+64.0,Guinea,1423
+65.0,Guinea,4241
+66.0,Guinea,2001
+67.0,Guinea,2071
+68.0,Guinea,2750
+69.0,Guinea,2544
+70.0,Guinea,3307
+71.0,Guinea,2972
+72.0,Guinea,3960
+73.0,Guinea,3501
+74.0,Guinea,2819
+75.0,Guinea,3380
+76.0,Guinea,6357
+77.0,Guinea,5138
+78.0,Guinea,7529
+79.0,Guinea,3931
+80.0,Guinea,3146
+81.0,Guinea,2537
+82.0,Guinea,5752
+83.0,Guinea,3634
+84.0,Guinea,3198
+85.0,Guinea,6889
+86.0,Guinea,10359
+87.0,Guinea,5028
+88.0,Guinea,10936
+89.0,Guinea,5586
+90.0,Guinea,11605
+91.0,Guinea,6048
+92.0,Guinea,10776
+93.0,Guinea,9324
+94.0,Guinea,14235
+95.0,Guinea,12783
+96.0,Guinea,13346
+97.0,Guinea,9515
+98.0,Guinea,13166
+99.0,Guinea,9396
+100.0,Guinea,12565
+101.0,Guinea,12990
+102.0,Guinea,16156
+103.0,Guinea,15841
+104.0,Guinea,18637
+105.0,Guinea,15018
+106.0,Guinea,13088
+107.0,Guinea,18095
+108.0,Guinea,17626
+109.0,Guinea,22210
+110.0,Guinea,17577
+111.0,Guinea,25004
+112.0,Guinea,14576
+113.0,Guinea,27085
+114.0,Guinea,18715
+115.0,Guinea,18656
+116.0,Guinea,20006
+117.0,Guinea,26167
+118.0,Guinea,27404
+119.0,Guinea,37209
+120.0,Guinea,48415
+121.0,Guinea,42813
+122.0,Guinea,40134
+123.0,Guinea,36796
+124.0,Guinea,31864
+125.0,Guinea,39794
+126.0,Guinea,25976
+127.0,Guinea,40938
+128.0,Guinea,64156
+129.0,Guinea,54255
+130.0,Guinea,48634
+131.0,Guinea,62649
+132.0,Guinea,74252
+133.0,Guinea,68745
+134.0,Guinea,45476
+135.0,Guinea,58696
+136.0,Guinea,93221
+137.0,Guinea,54712
+138.0,Guinea,66240
+139.0,Guinea,60861
+140.0,Guinea,70591
+141.0,Guinea,132045
+142.0,Guinea,49719
+143.0,Guinea,93878
+144.0,Guinea,65321
+145.0,Guinea,116093
+146.0,Guinea,98939
+147.0,Guinea,77182
+148.0,Guinea,85557
+149.0,Guinea,66403
+150.0,Guinea,83243
+151.0,Guinea,110754
+152.0,Guinea,118362
+153.0,Guinea,30308
+154.0,Guinea,79350
+155.0,Guinea,103564
+156.0,Guinea,46509
+157.0,Guinea,117412
+158.0,Guinea,68583
+159.0,Guinea,144123
+160.0,Guinea,71343
+161.0,Guinea,66053
+162.0,Guinea,111106
+163.0,Guinea,119424
+164.0,Guinea,106541
+165.0,Guinea,82482
+166.0,Guinea,86702
+167.0,Guinea,79397
+168.0,Guinea,78316
+169.0,Guinea,110073
+170.0,Guinea,73792
+171.0,Guinea,79717
+172.0,Guinea,47091
+173.0,Guinea,126422
+174.0,Guinea,103650
+175.0,Guinea,54962
+176.0,Guinea,91177
+177.0,Guinea,78705
+178.0,Guinea,116905
+179.0,Guinea,77500
+180.0,Guinea,49431
+181.0,Guinea,89277
+182.0,Guinea,88107
+183.0,Guinea,72456
+184.0,Guinea,68877
+185.0,Guinea,61089
+186.0,Guinea,83578
+187.0,Guinea,46833
+188.0,Guinea,94040
+189.0,Guinea,43144
+190.0,Guinea,63731
+191.0,Guinea,79973
+192.0,Guinea,49519
+193.0,Guinea,61072
+194.0,Guinea,98608
+195.0,Guinea,86612
+196.0,Guinea,61863
+197.0,Guinea,75057
+198.0,Guinea,66928
+199.0,Guinea,42314
+200.0,Guinea,56423
+201.0,Guinea,32133
+202.0,Guinea,40131
+203.0,Guinea,57647
+204.0,Guinea,39116
+205.0,Guinea,37625
+206.0,Guinea,34101
+207.0,Guinea,20953
+208.0,Guinea,25432
+209.0,Guinea,32626
+210.0,Guinea,17628
+211.0,Guinea,23476
+212.0,Guinea,34876
+213.0,Guinea,29876
+214.0,Guinea,32961
+215.0,Guinea,20670
+216.0,Guinea,25364
+217.0,Guinea,22805
+218.0,Guinea,38672
+219.0,Guinea,38251
+220.0,Guinea,17901
+221.0,Guinea,18191
+222.0,Guinea,12919
+223.0,Guinea,11440
+224.0,Guinea,13926
+225.0,Guinea,19036
+226.0,Guinea,18891
+227.0,Guinea,18824
+228.0,Guinea,22434
+229.0,Guinea,14881
+230.0,Guinea,7797
+231.0,Guinea,10598
+232.0,Guinea,11209
+233.0,Guinea,8221
+234.0,Guinea,6233
+235.0,Guinea,15896
+236.0,Guinea,9334
+237.0,Guinea,10607
+238.0,Guinea,7360
+239.0,Guinea,4518
+240.0,Guinea,6103
+241.0,Guinea,5900
+242.0,Guinea,13081
+243.0,Guinea,11413
+244.0,Guinea,10829
+245.0,Guinea,9346
+246.0,Guinea,7179
+247.0,Guinea,9706
+248.0,Guinea,8679
+249.0,Guinea,8420
+250.0,Guinea,4021
+251.0,Guinea,5685
+252.0,Guinea,5818
+253.0,Guinea,5719
+254.0,Guinea,5752
+255.0,Guinea,6325
+256.0,Guinea,7344
+257.0,Guinea,2043
+258.0,Guinea,3200
+259.0,Guinea,3049
+260.0,Guinea,5510
+261.0,Guinea,4688
+262.0,Guinea,4353
+263.0,Guinea,3859
+264.0,Guinea,4244
+265.0,Guinea,2745
+266.0,Guinea,3613
+267.0,Guinea,2876
+268.0,Guinea,2511
+269.0,Guinea,2267
+270.0,Guinea,1265
+271.0,Guinea,1842
+272.0,Guinea,2464
+273.0,Guinea,3716
+274.0,Guinea,3092
+275.0,Guinea,2467
+276.0,Guinea,2104
+277.0,Guinea,1376
+278.0,Guinea,1882
+279.0,Guinea,1215
+280.0,Guinea,1669
+281.0,Guinea,2141
+282.0,Guinea,1467
+283.0,Guinea,2041
+284.0,Guinea,1775
+285.0,Guinea,790
+286.0,Guinea,1386
+287.0,Guinea,1048
+288.0,Guinea,605
+289.0,Guinea,1756
+290.0,Guinea,939
+291.0,Guinea,1340
+292.0,Guinea,460
+293.0,Guinea,1224
+294.0,Guinea,1055
+295.0,Guinea,905
+296.0,Guinea,1016
+297.0,Guinea,652
+298.0,Guinea,362
+299.0,Guinea,484
+300.0,Guinea,585
+301.0,Guinea,315
+302.0,Guinea,813
+303.0,Guinea,291
+304.0,Guinea,427
+305.0,Guinea,313
+306.0,Guinea,533
+307.0,Guinea,568
+308.0,Guinea,695
+309.0,Guinea,387
+310.0,Guinea,365
+311.0,Guinea,554
+312.0,Guinea,437
+313.0,Guinea,403
+314.0,Guinea,284
+315.0,Guinea,287
+316.0,Guinea,213
+317.0,Guinea,481
+318.0,Guinea,245
+319.0,Guinea,299
+320.0,Guinea,271
+321.0,Guinea,276
+322.0,Guinea,186
+323.0,Guinea,277
+324.0,Guinea,315
+325.0,Guinea,218
+326.0,Guinea,172
+327.0,Guinea,117
+328.0,Guinea,148
+329.0,Guinea,206
+330.0,Guinea,155
+331.0,Guinea,197
+332.0,Guinea,114
+333.0,Guinea,136
+334.0,Guinea,63
+335.0,Guinea,123
+336.0,Guinea,156
+337.0,Guinea,114
+338.0,Guinea,131
+339.0,Guinea,125
+340.0,Guinea,76
+341.0,Guinea,116
+342.0,Guinea,96
+343.0,Guinea,152
+344.0,Guinea,80
+345.0,Guinea,105
+346.0,Guinea,127
+347.0,Guinea,110
+348.0,Guinea,61
+349.0,Guinea,110
+350.0,Guinea,73
+351.0,Guinea,55
+352.0,Guinea,93
+353.0,Guinea,53
+354.0,Guinea,92
+355.0,Guinea,50
+356.0,Guinea,27
+357.0,Guinea,67
+358.0,Guinea,56
+359.0,Guinea,69
+360.0,Guinea,46
+361.0,Guinea,27
+362.0,Guinea,36
+363.0,Guinea,42
+364.0,Guinea,26
+365.0,Guinea,26
+366.0,Guinea,51
+367.0,Guinea,36
+368.0,Guinea,26
+369.0,Guinea,31
+370.0,Guinea,44
+371.0,Guinea,24
+372.0,Guinea,28
+373.0,Guinea,35
+374.0,Guinea,29
+375.0,Guinea,14
+376.0,Guinea,47
+377.0,Guinea,21
+378.0,Guinea,14
+379.0,Guinea,19
+380.0,Guinea,20
+381.0,Guinea,24
+382.0,Guinea,15
+383.0,Guinea,15
+384.0,Guinea,6
+385.0,Guinea,18
+386.0,Guinea,19
+387.0,Guinea,8
+388.0,Guinea,10
+389.0,Guinea,7
+390.0,Guinea,8
+391.0,Guinea,20
+392.0,Guinea,15
+393.0,Guinea,10
+394.0,Guinea,3
+395.0,Guinea,5
+396.0,Guinea,7
+397.0,Guinea,6
+398.0,Guinea,8
+399.0,Guinea,8
+400.0,Guinea,7
+401.0,Guinea,6
+402.0,Guinea,7
+403.0,Guinea,10
+404.0,Guinea,1
+405.0,Guinea,3
+406.0,Guinea,5
+407.0,Guinea,4
+408.0,Guinea,3
+409.0,Guinea,6
+410.0,Guinea,5
+411.0,Guinea,3
+412.0,Guinea,0
+413.0,Guinea,0
+414.0,Guinea,0
+415.0,Guinea,1
+416.0,Guinea,4
+417.0,Guinea,3
+418.0,Guinea,6
+419.0,Guinea,0
+420.0,Guinea,2
+421.0,Guinea,2
+422.0,Guinea,2
+423.0,Guinea,3
+424.0,Guinea,2
+425.0,Guinea,1
+426.0,Guinea,1
+427.0,Guinea,3
+428.0,Guinea,0
+429.0,Guinea,0
+430.0,Guinea,2
+431.0,Guinea,0
+432.0,Guinea,1
+433.0,Guinea,0
+434.0,Guinea,0
+435.0,Guinea,2
+436.0,Guinea,2
+437.0,Guinea,0
+438.0,Guinea,0
+439.0,Guinea,0
+440.0,Guinea,0
+441.0,Guinea,2
+442.0,Guinea,2
+443.0,Guinea,1
+444.0,Guinea,0
+445.0,Guinea,0
+446.0,Guinea,0
+447.0,Guinea,0
+448.0,Guinea,0
+449.0,Guinea,0
+0.0,Liberia,0
+1.0,Liberia,1
+2.0,Liberia,1
+3.0,Liberia,7
+4.0,Liberia,13
+5.0,Liberia,3
+6.0,Liberia,14
+7.0,Liberia,17
+8.0,Liberia,12
+9.0,Liberia,12
+10.0,Liberia,26
+11.0,Liberia,33
+12.0,Liberia,17
+13.0,Liberia,25
+14.0,Liberia,38
+15.0,Liberia,17
+16.0,Liberia,28
+17.0,Liberia,31
+18.0,Liberia,16
+19.0,Liberia,70
+20.0,Liberia,24
+21.0,Liberia,44
+22.0,Liberia,32
+23.0,Liberia,70
+24.0,Liberia,31
+25.0,Liberia,60
+26.0,Liberia,59
+27.0,Liberia,114
+28.0,Liberia,44
+29.0,Liberia,97
+30.0,Liberia,54
+31.0,Liberia,166
+32.0,Liberia,97
+33.0,Liberia,78
+34.0,Liberia,159
+35.0,Liberia,167
+36.0,Liberia,63
+37.0,Liberia,135
+38.0,Liberia,180
+39.0,Liberia,233
+40.0,Liberia,274
+41.0,Liberia,172
+42.0,Liberia,416
+43.0,Liberia,202
+44.0,Liberia,148
+45.0,Liberia,189
+46.0,Liberia,400
+47.0,Liberia,433
+48.0,Liberia,274
+49.0,Liberia,560
+50.0,Liberia,583
+51.0,Liberia,344
+52.0,Liberia,730
+53.0,Liberia,569
+54.0,Liberia,661
+55.0,Liberia,547
+56.0,Liberia,607
+57.0,Liberia,1085
+58.0,Liberia,804
+59.0,Liberia,600
+60.0,Liberia,393
+61.0,Liberia,1316
+62.0,Liberia,1377
+63.0,Liberia,1236
+64.0,Liberia,1573
+65.0,Liberia,1834
+66.0,Liberia,1194
+67.0,Liberia,1470
+68.0,Liberia,2080
+69.0,Liberia,1459
+70.0,Liberia,1028
+71.0,Liberia,1294
+72.0,Liberia,3881
+73.0,Liberia,2627
+74.0,Liberia,3709
+75.0,Liberia,2646
+76.0,Liberia,4584
+77.0,Liberia,4541
+78.0,Liberia,3141
+79.0,Liberia,4563
+80.0,Liberia,5528
+81.0,Liberia,4041
+82.0,Liberia,5842
+83.0,Liberia,7252
+84.0,Liberia,6829
+85.0,Liberia,9500
+86.0,Liberia,5029
+87.0,Liberia,6475
+88.0,Liberia,8592
+89.0,Liberia,7808
+90.0,Liberia,7593
+91.0,Liberia,5032
+92.0,Liberia,14378
+93.0,Liberia,12018
+94.0,Liberia,15856
+95.0,Liberia,14282
+96.0,Liberia,13742
+97.0,Liberia,11969
+98.0,Liberia,13891
+99.0,Liberia,23668
+100.0,Liberia,15400
+101.0,Liberia,28534
+102.0,Liberia,19864
+103.0,Liberia,23362
+104.0,Liberia,31633
+105.0,Liberia,11143
+106.0,Liberia,30723
+107.0,Liberia,33478
+108.0,Liberia,41603
+109.0,Liberia,28961
+110.0,Liberia,39014
+111.0,Liberia,18689
+112.0,Liberia,53193
+113.0,Liberia,23007
+114.0,Liberia,37959
+115.0,Liberia,37488
+116.0,Liberia,48140
+117.0,Liberia,55735
+118.0,Liberia,59781
+119.0,Liberia,33151
+120.0,Liberia,27468
+121.0,Liberia,66848
+122.0,Liberia,43452
+123.0,Liberia,61992
+124.0,Liberia,50070
+125.0,Liberia,61470
+126.0,Liberia,47312
+127.0,Liberia,62748
+128.0,Liberia,44205
+129.0,Liberia,33386
+130.0,Liberia,39659
+131.0,Liberia,69378
+132.0,Liberia,45240
+133.0,Liberia,32143
+134.0,Liberia,59118
+135.0,Liberia,33343
+136.0,Liberia,83839
+137.0,Liberia,66524
+138.0,Liberia,52893
+139.0,Liberia,32159
+140.0,Liberia,53495
+141.0,Liberia,63630
+142.0,Liberia,35853
+143.0,Liberia,80022
+144.0,Liberia,55833
+145.0,Liberia,26442
+146.0,Liberia,62556
+147.0,Liberia,32801
+148.0,Liberia,21796
+149.0,Liberia,41460
+150.0,Liberia,35457
+151.0,Liberia,42365
+152.0,Liberia,44806
+153.0,Liberia,22531
+154.0,Liberia,25244
+155.0,Liberia,35061
+156.0,Liberia,31916
+157.0,Liberia,28344
+158.0,Liberia,22049
+159.0,Liberia,23961
+160.0,Liberia,24859
+161.0,Liberia,19008
+162.0,Liberia,9881
+163.0,Liberia,32846
+164.0,Liberia,11896
+165.0,Liberia,21795
+166.0,Liberia,22314
+167.0,Liberia,8271
+168.0,Liberia,17944
+169.0,Liberia,10876
+170.0,Liberia,18259
+171.0,Liberia,14033
+172.0,Liberia,19597
+173.0,Liberia,10636
+174.0,Liberia,15354
+175.0,Liberia,8440
+176.0,Liberia,10983
+177.0,Liberia,11826
+178.0,Liberia,6086
+179.0,Liberia,7318
+180.0,Liberia,7543
+181.0,Liberia,6695
+182.0,Liberia,4477
+183.0,Liberia,9312
+184.0,Liberia,6047
+185.0,Liberia,5892
+186.0,Liberia,6121
+187.0,Liberia,4421
+188.0,Liberia,4180
+189.0,Liberia,3439
+190.0,Liberia,2706
+191.0,Liberia,3297
+192.0,Liberia,2890
+193.0,Liberia,4271
+194.0,Liberia,4676
+195.0,Liberia,4579
+196.0,Liberia,1903
+197.0,Liberia,3276
+198.0,Liberia,2128
+199.0,Liberia,2427
+200.0,Liberia,1555
+201.0,Liberia,1267
+202.0,Liberia,2282
+203.0,Liberia,1570
+204.0,Liberia,1941
+205.0,Liberia,1349
+206.0,Liberia,2265
+207.0,Liberia,1056
+208.0,Liberia,1559
+209.0,Liberia,2363
+210.0,Liberia,1667
+211.0,Liberia,1689
+212.0,Liberia,577
+213.0,Liberia,605
+214.0,Liberia,960
+215.0,Liberia,805
+216.0,Liberia,377
+217.0,Liberia,847
+218.0,Liberia,646
+219.0,Liberia,677
+220.0,Liberia,468
+221.0,Liberia,772
+222.0,Liberia,774
+223.0,Liberia,496
+224.0,Liberia,850
+225.0,Liberia,558
+226.0,Liberia,331
+227.0,Liberia,329
+228.0,Liberia,328
+229.0,Liberia,496
+230.0,Liberia,480
+231.0,Liberia,267
+232.0,Liberia,271
+233.0,Liberia,236
+234.0,Liberia,214
+235.0,Liberia,167
+236.0,Liberia,194
+237.0,Liberia,198
+238.0,Liberia,328
+239.0,Liberia,191
+240.0,Liberia,164
+241.0,Liberia,106
+242.0,Liberia,137
+243.0,Liberia,135
+244.0,Liberia,194
+245.0,Liberia,136
+246.0,Liberia,193
+247.0,Liberia,120
+248.0,Liberia,103
+249.0,Liberia,106
+250.0,Liberia,128
+251.0,Liberia,55
+252.0,Liberia,101
+253.0,Liberia,70
+254.0,Liberia,49
+255.0,Liberia,128
+256.0,Liberia,55
+257.0,Liberia,62
+258.0,Liberia,63
+259.0,Liberia,50
+260.0,Liberia,63
+261.0,Liberia,43
+262.0,Liberia,38
+263.0,Liberia,48
+264.0,Liberia,22
+265.0,Liberia,69
+266.0,Liberia,31
+267.0,Liberia,47
+268.0,Liberia,5
+269.0,Liberia,17
+270.0,Liberia,28
+271.0,Liberia,14
+272.0,Liberia,20
+273.0,Liberia,39
+274.0,Liberia,20
+275.0,Liberia,19
+276.0,Liberia,27
+277.0,Liberia,8
+278.0,Liberia,10
+279.0,Liberia,16
+280.0,Liberia,19
+281.0,Liberia,20
+282.0,Liberia,6
+283.0,Liberia,10
+284.0,Liberia,14
+285.0,Liberia,15
+286.0,Liberia,8
+287.0,Liberia,4
+288.0,Liberia,4
+289.0,Liberia,11
+290.0,Liberia,5
+291.0,Liberia,6
+292.0,Liberia,13
+293.0,Liberia,8
+294.0,Liberia,3
+295.0,Liberia,5
+296.0,Liberia,5
+297.0,Liberia,8
+298.0,Liberia,10
+299.0,Liberia,6
+300.0,Liberia,4
+301.0,Liberia,5
+302.0,Liberia,11
+303.0,Liberia,5
+304.0,Liberia,2
+305.0,Liberia,4
+306.0,Liberia,2
+307.0,Liberia,5
+308.0,Liberia,0
+309.0,Liberia,1
+310.0,Liberia,0
+311.0,Liberia,2
+312.0,Liberia,2
+313.0,Liberia,1
+314.0,Liberia,4
+315.0,Liberia,0
+316.0,Liberia,1
+317.0,Liberia,3
+318.0,Liberia,3
+319.0,Liberia,3
+320.0,Liberia,1
+321.0,Liberia,1
+322.0,Liberia,5
+323.0,Liberia,1
+324.0,Liberia,1
+325.0,Liberia,0
+326.0,Liberia,1
+327.0,Liberia,1
+328.0,Liberia,0
+329.0,Liberia,0
+330.0,Liberia,0
+331.0,Liberia,1
+332.0,Liberia,2
+333.0,Liberia,0
+334.0,Liberia,0
+335.0,Liberia,0
+336.0,Liberia,0
+337.0,Liberia,0
+338.0,Liberia,1
+339.0,Liberia,0
+340.0,Liberia,0
+341.0,Liberia,0
+342.0,Liberia,0
+343.0,Liberia,0
+344.0,Liberia,0
+345.0,Liberia,0
+346.0,Liberia,0
+347.0,Liberia,0
+348.0,Liberia,0
+349.0,Liberia,0
+350.0,Liberia,0
+351.0,Liberia,0
+352.0,Liberia,0
+353.0,Liberia,0
+354.0,Liberia,0
+355.0,Liberia,0
+356.0,Liberia,0
+357.0,Liberia,0
+358.0,Liberia,0
+359.0,Liberia,0
+360.0,Liberia,0
+361.0,Liberia,0
+362.0,Liberia,0
+363.0,Liberia,0
+364.0,Liberia,0
+365.0,Liberia,0
+366.0,Liberia,0
+367.0,Liberia,0
+368.0,Liberia,0
+369.0,Liberia,0
+370.0,Liberia,0
+371.0,Liberia,0
+372.0,Liberia,0
+373.0,Liberia,0
+374.0,Liberia,0
+375.0,Liberia,0
+376.0,Liberia,0
+377.0,Liberia,0
+378.0,Liberia,0
+379.0,Liberia,0
+380.0,Liberia,0
+381.0,Liberia,0
+382.0,Liberia,0
+383.0,Liberia,0
+384.0,Liberia,0
+385.0,Liberia,0
+386.0,Liberia,0
+387.0,Liberia,0
+388.0,Liberia,0
+389.0,Liberia,0
+390.0,Liberia,0
+391.0,Liberia,0
+392.0,Liberia,0
+393.0,Liberia,0
+394.0,Liberia,0
+395.0,Liberia,0
+396.0,Liberia,0
+397.0,Liberia,0
+398.0,Liberia,0
+399.0,Liberia,0
+400.0,Liberia,0
+401.0,Liberia,0
+402.0,Liberia,0
+403.0,Liberia,0
+404.0,Liberia,0
+405.0,Liberia,0
+406.0,Liberia,0
+407.0,Liberia,0
+408.0,Liberia,0
+409.0,Liberia,0
+410.0,Liberia,0
+411.0,Liberia,0
+412.0,Liberia,0
+413.0,Liberia,0
+414.0,Liberia,0
+415.0,Liberia,0
+416.0,Liberia,0
+417.0,Liberia,0
+418.0,Liberia,0
+419.0,Liberia,0
+420.0,Liberia,0
+421.0,Liberia,0
+422.0,Liberia,0
+423.0,Liberia,0
+424.0,Liberia,0
+425.0,Liberia,0
+426.0,Liberia,0
+427.0,Liberia,0
+428.0,Liberia,0
+429.0,Liberia,0
+430.0,Liberia,0
+431.0,Liberia,0
+432.0,Liberia,0
+433.0,Liberia,0
+434.0,Liberia,0
+435.0,Liberia,0
+436.0,Liberia,0
+437.0,Liberia,0
+438.0,Liberia,0
+439.0,Liberia,0
+440.0,Liberia,0
+441.0,Liberia,0
+442.0,Liberia,0
+443.0,Liberia,0
+444.0,Liberia,0
+445.0,Liberia,0
+446.0,Liberia,0
+447.0,Liberia,0
+448.0,Liberia,0
+449.0,Liberia,0
+0.0,Sierra Leone,3
+1.0,Sierra Leone,1
+2.0,Sierra Leone,6
+3.0,Sierra Leone,5
+4.0,Sierra Leone,7
+5.0,Sierra Leone,8
+6.0,Sierra Leone,6
+7.0,Sierra Leone,5
+8.0,Sierra Leone,11
+9.0,Sierra Leone,18
+10.0,Sierra Leone,9
+11.0,Sierra Leone,32
+12.0,Sierra Leone,8
+13.0,Sierra Leone,11
+14.0,Sierra Leone,38
+15.0,Sierra Leone,13
+16.0,Sierra Leone,30
+17.0,Sierra Leone,28
+18.0,Sierra Leone,34
+19.0,Sierra Leone,42
+20.0,Sierra Leone,28
+21.0,Sierra Leone,49
+22.0,Sierra Leone,26
+23.0,Sierra Leone,22
+24.0,Sierra Leone,39
+25.0,Sierra Leone,45
+26.0,Sierra Leone,41
+27.0,Sierra Leone,41
+28.0,Sierra Leone,26
+29.0,Sierra Leone,37
+30.0,Sierra Leone,84
+31.0,Sierra Leone,104
+32.0,Sierra Leone,57
+33.0,Sierra Leone,107
+34.0,Sierra Leone,115
+35.0,Sierra Leone,112
+36.0,Sierra Leone,117
+37.0,Sierra Leone,82
+38.0,Sierra Leone,77
+39.0,Sierra Leone,78
+40.0,Sierra Leone,94
+41.0,Sierra Leone,75
+42.0,Sierra Leone,129
+43.0,Sierra Leone,85
+44.0,Sierra Leone,166
+45.0,Sierra Leone,123
+46.0,Sierra Leone,115
+47.0,Sierra Leone,149
+48.0,Sierra Leone,210
+49.0,Sierra Leone,184
+50.0,Sierra Leone,201
+51.0,Sierra Leone,221
+52.0,Sierra Leone,136
+53.0,Sierra Leone,261
+54.0,Sierra Leone,375
+55.0,Sierra Leone,271
+56.0,Sierra Leone,387
+57.0,Sierra Leone,321
+58.0,Sierra Leone,544
+59.0,Sierra Leone,553
+60.0,Sierra Leone,350
+61.0,Sierra Leone,586
+62.0,Sierra Leone,480
+63.0,Sierra Leone,241
+64.0,Sierra Leone,804
+65.0,Sierra Leone,470
+66.0,Sierra Leone,584
+67.0,Sierra Leone,502
+68.0,Sierra Leone,560
+69.0,Sierra Leone,713
+70.0,Sierra Leone,756
+71.0,Sierra Leone,819
+72.0,Sierra Leone,867
+73.0,Sierra Leone,940
+74.0,Sierra Leone,1607
+75.0,Sierra Leone,887
+76.0,Sierra Leone,1335
+77.0,Sierra Leone,1575
+78.0,Sierra Leone,1385
+79.0,Sierra Leone,1382
+80.0,Sierra Leone,1222
+81.0,Sierra Leone,1963
+82.0,Sierra Leone,1750
+83.0,Sierra Leone,2270
+84.0,Sierra Leone,1385
+85.0,Sierra Leone,2626
+86.0,Sierra Leone,1882
+87.0,Sierra Leone,5370
+88.0,Sierra Leone,2171
+89.0,Sierra Leone,2164
+90.0,Sierra Leone,2731
+91.0,Sierra Leone,3028
+92.0,Sierra Leone,4773
+93.0,Sierra Leone,3044
+94.0,Sierra Leone,3126
+95.0,Sierra Leone,2238
+96.0,Sierra Leone,5224
+97.0,Sierra Leone,3375
+98.0,Sierra Leone,4084
+99.0,Sierra Leone,5156
+100.0,Sierra Leone,6234
+101.0,Sierra Leone,11612
+102.0,Sierra Leone,2918
+103.0,Sierra Leone,7230
+104.0,Sierra Leone,9000
+105.0,Sierra Leone,14739
+106.0,Sierra Leone,10015
+107.0,Sierra Leone,8422
+108.0,Sierra Leone,14135
+109.0,Sierra Leone,8114
+110.0,Sierra Leone,9316
+111.0,Sierra Leone,8991
+112.0,Sierra Leone,8832
+113.0,Sierra Leone,13202
+114.0,Sierra Leone,5932
+115.0,Sierra Leone,10018
+116.0,Sierra Leone,12348
+117.0,Sierra Leone,19657
+118.0,Sierra Leone,25253
+119.0,Sierra Leone,8041
+120.0,Sierra Leone,14053
+121.0,Sierra Leone,15328
+122.0,Sierra Leone,33690
+123.0,Sierra Leone,19624
+124.0,Sierra Leone,15716
+125.0,Sierra Leone,30111
+126.0,Sierra Leone,23050
+127.0,Sierra Leone,49510
+128.0,Sierra Leone,43028
+129.0,Sierra Leone,33282
+130.0,Sierra Leone,36239
+131.0,Sierra Leone,34029
+132.0,Sierra Leone,43015
+133.0,Sierra Leone,30648
+134.0,Sierra Leone,43139
+135.0,Sierra Leone,42685
+136.0,Sierra Leone,52405
+137.0,Sierra Leone,47840
+138.0,Sierra Leone,54403
+139.0,Sierra Leone,56286
+140.0,Sierra Leone,39850
+141.0,Sierra Leone,39724
+142.0,Sierra Leone,27760
+143.0,Sierra Leone,39005
+144.0,Sierra Leone,51639
+145.0,Sierra Leone,71799
+146.0,Sierra Leone,35676
+147.0,Sierra Leone,57534
+148.0,Sierra Leone,66733
+149.0,Sierra Leone,62689
+150.0,Sierra Leone,51312
+151.0,Sierra Leone,33316
+152.0,Sierra Leone,87613
+153.0,Sierra Leone,42373
+154.0,Sierra Leone,94324
+155.0,Sierra Leone,85876
+156.0,Sierra Leone,56641
+157.0,Sierra Leone,137840
+158.0,Sierra Leone,35021
+159.0,Sierra Leone,77641
+160.0,Sierra Leone,64564
+161.0,Sierra Leone,42830
+162.0,Sierra Leone,50978
+163.0,Sierra Leone,54313
+164.0,Sierra Leone,31944
+165.0,Sierra Leone,82689
+166.0,Sierra Leone,46559
+167.0,Sierra Leone,84320
+168.0,Sierra Leone,63871
+169.0,Sierra Leone,23528
+170.0,Sierra Leone,57431
+171.0,Sierra Leone,44958
+172.0,Sierra Leone,63043
+173.0,Sierra Leone,57972
+174.0,Sierra Leone,76027
+175.0,Sierra Leone,42186
+176.0,Sierra Leone,83680
+177.0,Sierra Leone,32284
+178.0,Sierra Leone,57192
+179.0,Sierra Leone,35364
+180.0,Sierra Leone,49368
+181.0,Sierra Leone,65200
+182.0,Sierra Leone,42941
+183.0,Sierra Leone,20567
+184.0,Sierra Leone,50626
+185.0,Sierra Leone,51901
+186.0,Sierra Leone,16783
+187.0,Sierra Leone,34472
+188.0,Sierra Leone,33627
+189.0,Sierra Leone,64977
+190.0,Sierra Leone,24600
+191.0,Sierra Leone,29012
+192.0,Sierra Leone,20284
+193.0,Sierra Leone,14733
+194.0,Sierra Leone,23102
+195.0,Sierra Leone,17787
+196.0,Sierra Leone,47511
+197.0,Sierra Leone,26156
+198.0,Sierra Leone,26604
+199.0,Sierra Leone,26793
+200.0,Sierra Leone,39490
+201.0,Sierra Leone,26575
+202.0,Sierra Leone,16299
+203.0,Sierra Leone,25289
+204.0,Sierra Leone,14168
+205.0,Sierra Leone,13245
+206.0,Sierra Leone,13573
+207.0,Sierra Leone,18588
+208.0,Sierra Leone,6776
+209.0,Sierra Leone,9157
+210.0,Sierra Leone,9680
+211.0,Sierra Leone,12085
+212.0,Sierra Leone,7776
+213.0,Sierra Leone,13439
+214.0,Sierra Leone,9421
+215.0,Sierra Leone,10633
+216.0,Sierra Leone,8824
+217.0,Sierra Leone,9334
+218.0,Sierra Leone,11149
+219.0,Sierra Leone,5821
+220.0,Sierra Leone,9321
+221.0,Sierra Leone,8740
+222.0,Sierra Leone,6273
+223.0,Sierra Leone,12436
+224.0,Sierra Leone,6921
+225.0,Sierra Leone,9543
+226.0,Sierra Leone,6020
+227.0,Sierra Leone,9448
+228.0,Sierra Leone,6162
+229.0,Sierra Leone,6353
+230.0,Sierra Leone,4726
+231.0,Sierra Leone,5101
+232.0,Sierra Leone,4267
+233.0,Sierra Leone,4348
+234.0,Sierra Leone,4076
+235.0,Sierra Leone,2950
+236.0,Sierra Leone,2641
+237.0,Sierra Leone,5166
+238.0,Sierra Leone,3921
+239.0,Sierra Leone,1912
+240.0,Sierra Leone,3577
+241.0,Sierra Leone,3414
+242.0,Sierra Leone,2237
+243.0,Sierra Leone,2454
+244.0,Sierra Leone,3454
+245.0,Sierra Leone,2605
+246.0,Sierra Leone,3136
+247.0,Sierra Leone,2266
+248.0,Sierra Leone,2234
+249.0,Sierra Leone,1653
+250.0,Sierra Leone,1094
+251.0,Sierra Leone,2411
+252.0,Sierra Leone,928
+253.0,Sierra Leone,816
+254.0,Sierra Leone,1056
+255.0,Sierra Leone,1626
+256.0,Sierra Leone,1165
+257.0,Sierra Leone,763
+258.0,Sierra Leone,1155
+259.0,Sierra Leone,1415
+260.0,Sierra Leone,718
+261.0,Sierra Leone,648
+262.0,Sierra Leone,737
+263.0,Sierra Leone,824
+264.0,Sierra Leone,922
+265.0,Sierra Leone,714
+266.0,Sierra Leone,746
+267.0,Sierra Leone,607
+268.0,Sierra Leone,530
+269.0,Sierra Leone,350
+270.0,Sierra Leone,685
+271.0,Sierra Leone,486
+272.0,Sierra Leone,223
+273.0,Sierra Leone,608
+274.0,Sierra Leone,570
+275.0,Sierra Leone,521
+276.0,Sierra Leone,362
+277.0,Sierra Leone,367
+278.0,Sierra Leone,363
+279.0,Sierra Leone,238
+280.0,Sierra Leone,525
+281.0,Sierra Leone,303
+282.0,Sierra Leone,236
+283.0,Sierra Leone,336
+284.0,Sierra Leone,287
+285.0,Sierra Leone,174
+286.0,Sierra Leone,260
+287.0,Sierra Leone,171
+288.0,Sierra Leone,233
+289.0,Sierra Leone,133
+290.0,Sierra Leone,192
+291.0,Sierra Leone,174
+292.0,Sierra Leone,216
+293.0,Sierra Leone,177
+294.0,Sierra Leone,129
+295.0,Sierra Leone,187
+296.0,Sierra Leone,101
+297.0,Sierra Leone,63
+298.0,Sierra Leone,84
+299.0,Sierra Leone,119
+300.0,Sierra Leone,139
+301.0,Sierra Leone,130
+302.0,Sierra Leone,103
+303.0,Sierra Leone,104
+304.0,Sierra Leone,125
+305.0,Sierra Leone,211
+306.0,Sierra Leone,159
+307.0,Sierra Leone,47
+308.0,Sierra Leone,59
+309.0,Sierra Leone,67
+310.0,Sierra Leone,53
+311.0,Sierra Leone,73
+312.0,Sierra Leone,40
+313.0,Sierra Leone,40
+314.0,Sierra Leone,61
+315.0,Sierra Leone,31
+316.0,Sierra Leone,47
+317.0,Sierra Leone,38
+318.0,Sierra Leone,56
+319.0,Sierra Leone,42
+320.0,Sierra Leone,37
+321.0,Sierra Leone,27
+322.0,Sierra Leone,43
+323.0,Sierra Leone,28
+324.0,Sierra Leone,63
+325.0,Sierra Leone,30
+326.0,Sierra Leone,20
+327.0,Sierra Leone,30
+328.0,Sierra Leone,20
+329.0,Sierra Leone,24
+330.0,Sierra Leone,27
+331.0,Sierra Leone,7
+332.0,Sierra Leone,16
+333.0,Sierra Leone,23
+334.0,Sierra Leone,17
+335.0,Sierra Leone,9
+336.0,Sierra Leone,20
+337.0,Sierra Leone,30
+338.0,Sierra Leone,11
+339.0,Sierra Leone,8
+340.0,Sierra Leone,11
+341.0,Sierra Leone,15
+342.0,Sierra Leone,11
+343.0,Sierra Leone,11
+344.0,Sierra Leone,14
+345.0,Sierra Leone,6
+346.0,Sierra Leone,4
+347.0,Sierra Leone,3
+348.0,Sierra Leone,4
+349.0,Sierra Leone,3
+350.0,Sierra Leone,13
+351.0,Sierra Leone,11
+352.0,Sierra Leone,7
+353.0,Sierra Leone,8
+354.0,Sierra Leone,10
+355.0,Sierra Leone,6
+356.0,Sierra Leone,3
+357.0,Sierra Leone,3
+358.0,Sierra Leone,12
+359.0,Sierra Leone,5
+360.0,Sierra Leone,6
+361.0,Sierra Leone,4
+362.0,Sierra Leone,2
+363.0,Sierra Leone,3
+364.0,Sierra Leone,3
+365.0,Sierra Leone,3
+366.0,Sierra Leone,1
+367.0,Sierra Leone,2
+368.0,Sierra Leone,1
+369.0,Sierra Leone,0
+370.0,Sierra Leone,1
+371.0,Sierra Leone,1
+372.0,Sierra Leone,1
+373.0,Sierra Leone,1
+374.0,Sierra Leone,2
+375.0,Sierra Leone,0
+376.0,Sierra Leone,2
+377.0,Sierra Leone,0
+378.0,Sierra Leone,0
+379.0,Sierra Leone,1
+380.0,Sierra Leone,1
+381.0,Sierra Leone,1
+382.0,Sierra Leone,1
+383.0,Sierra Leone,3
+384.0,Sierra Leone,0
+385.0,Sierra Leone,1
+386.0,Sierra Leone,0
+387.0,Sierra Leone,1
+388.0,Sierra Leone,3
+389.0,Sierra Leone,1
+390.0,Sierra Leone,0
+391.0,Sierra Leone,0
+392.0,Sierra Leone,1
+393.0,Sierra Leone,0
+394.0,Sierra Leone,2
+395.0,Sierra Leone,0
+396.0,Sierra Leone,0
+397.0,Sierra Leone,0
+398.0,Sierra Leone,1
+399.0,Sierra Leone,1
+400.0,Sierra Leone,1
+401.0,Sierra Leone,0
+402.0,Sierra Leone,0
+403.0,Sierra Leone,0
+404.0,Sierra Leone,0
+405.0,Sierra Leone,0
+406.0,Sierra Leone,0
+407.0,Sierra Leone,0
+408.0,Sierra Leone,0
+409.0,Sierra Leone,0
+410.0,Sierra Leone,0
+411.0,Sierra Leone,0
+412.0,Sierra Leone,0
+413.0,Sierra Leone,0
+414.0,Sierra Leone,0
+415.0,Sierra Leone,0
+416.0,Sierra Leone,0
+417.0,Sierra Leone,0
+418.0,Sierra Leone,0
+419.0,Sierra Leone,0
+420.0,Sierra Leone,0
+421.0,Sierra Leone,0
+422.0,Sierra Leone,0
+423.0,Sierra Leone,0
+424.0,Sierra Leone,0
+425.0,Sierra Leone,0
+426.0,Sierra Leone,0
+427.0,Sierra Leone,0
+428.0,Sierra Leone,0
+429.0,Sierra Leone,0
+430.0,Sierra Leone,0
+431.0,Sierra Leone,0
+432.0,Sierra Leone,0
+433.0,Sierra Leone,0
+434.0,Sierra Leone,0
+435.0,Sierra Leone,0
+436.0,Sierra Leone,0
+437.0,Sierra Leone,0
+438.0,Sierra Leone,0
+439.0,Sierra Leone,0
+440.0,Sierra Leone,0
+441.0,Sierra Leone,0
+442.0,Sierra Leone,0
+443.0,Sierra Leone,0
+444.0,Sierra Leone,0
+445.0,Sierra Leone,0
+446.0,Sierra Leone,0
+447.0,Sierra Leone,0
+448.0,Sierra Leone,0
+449.0,Sierra Leone,0

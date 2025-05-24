@@ -4,17 +4,20 @@ functions {
               real beta,
               real sigma,
               real gamma,
+              real alpha,
               real N) {
     vector[5] dydt;
     real S = y[1];
     real E = y[2];
     real I = y[3];
     real R = y[4];
+    //real D = y[5]
 
     dydt[1] = -beta * I * S / N;              // dS/dt
     dydt[2] = beta * I * S / N - gamma * E;   // dE/dt
-    dydt[3] = gamma * E - sigma * I;          // dI/dt
+    dydt[3] = gamma * E - (sigma + alpha) * I;          // dI/dt
     dydt[4] = sigma * I;                      // dR/dt
+    //dydt[5] = alpha * I;  
     dydt[5] = gamma * E;                      // Cumulative incidence
 
     return dydt;
@@ -23,43 +26,46 @@ functions {
 data {
   int<lower=1> N_countries;                // Number of countries (3)
   int<lower=1> n_days;                     // Number of time points
-  array[N_countries] vector[5] y0;         // Initial conditions for each country
+  array[N_countries] vector[6] y0;         // Initial conditions for each country
   real t0;                                 // Initial time
   array[n_days] real t;                    // Time points
   array[N_countries] int N;                // Population sizes
   array[N_countries, n_days] int<lower=0> cases; // Observed cases for each country
 }
 parameters {
+  real<lower=0,upper=1> reporting_rate; 
   vector<lower=0>[N_countries] beta;       // Country-specific transmission rates
   real<lower=0> sigma;                     // Shared recovery rate
+  //real<lower=0> alpha;
   real<lower=0> gamma;                     // Shared progression rate (E to I)
   real<lower=0> phi_inv;                   // Negative binomial overdispersion
 }
-transformed parameters {
-    real<lower=0,upper=1> reporting_rate;    
-  array[N_countries, n_days] vector[5] y;   // SEIR states for each country
+transformed parameters {  
+  array[N_countries, n_days] vector[6] y;   // SEIR states for each country
   array[N_countries, n_days] real incidence; // Incidence for each country
   real<lower=0> phi = 1.0 / phi_inv;       // Negative binomial dispersion
   
-  reporting_rate = 0.8;
+  //reporting_rate = 0.8;
 
   for (c in 1:N_countries) {
     // Solve ODE for each country
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, N[c] + 0.0);
+    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, alpha, N[c] + 0.0);
+    
     // Compute incidence
-    incidence[c, 1] = y[c, 1, 5];         // Initial incidence
+    incidence[c, 1] = y[c, 1, 6];         // Initial incidence
     for (i in 2:n_days) {
-      incidence[c, i] = y[c, i, 5] - y[c, i-1, 5];
+      incidence[c, i] = y[c, i, 6] - y[c, i-1, 6];
     }
   }
 }
 model {
   // Priors
   beta ~ lognormal(log(0.35), 0.5);        // Infection rate prior
-  sigma ~ lognormal(log(1.0/7), 0.3);      // Prior mean: 4-day recovery period
-  gamma ~ lognormal(log(1.0/10), 0.3);      // Prior mean: 6-day incubation period
+  //alpha ~ lognormal(log(0.3), 0.2); 
+  sigma ~ lognormal(log(1.0/10), 0.5);      // Prior mean: 10-day recovery period
+  gamma ~ lognormal(log(1.0/7), 0.5);      // Prior mean: 7-day incubation period
   phi_inv ~ exponential(5);
-  //reporting_rate ~ beta(8, 2);             // Centered around 0.8
+  reporting_rate ~ beta(2, 2);             // Centered around 0.8
 
   // Likelihood
   for (c in 1:N_countries) {

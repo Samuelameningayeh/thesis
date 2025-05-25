@@ -4,7 +4,6 @@ functions {
               real beta,
               real sigma,
               real gamma,
-              real alpha,
               real N) {
     vector[5] dydt;
     real S = y[1];
@@ -15,7 +14,7 @@ functions {
 
     dydt[1] = -beta * I * S / N;              // dS/dt
     dydt[2] = beta * I * S / N - gamma * E;   // dE/dt
-    dydt[3] = gamma * E - (sigma + alpha) * I;          // dI/dt
+    dydt[3] = gamma * E - (sigma) * I;          // dI/dt
     dydt[4] = sigma * I;                      // dR/dt
     //dydt[5] = alpha * I;  
     dydt[5] = gamma * E;                      // Cumulative incidence
@@ -26,7 +25,7 @@ functions {
 data {
   int<lower=1> N_countries;                // Number of countries (3)
   int<lower=1> n_days;                     // Number of time points
-  array[N_countries] vector[6] y0;         // Initial conditions for each country
+  array[N_countries] vector[5] y0;         // Initial conditions for each country
   real t0;                                 // Initial time
   array[n_days] real t;                    // Time points
   array[N_countries] int N;                // Population sizes
@@ -41,7 +40,7 @@ parameters {
   real<lower=0> phi_inv;                   // Negative binomial overdispersion
 }
 transformed parameters {  
-  array[N_countries, n_days] vector[6] y;   // SEIR states for each country
+  array[N_countries, n_days] vector[5] y;   // SEIR states for each country
   array[N_countries, n_days] real incidence; // Incidence for each country
   real<lower=0> phi = 1.0 / phi_inv;       // Negative binomial dispersion
   
@@ -49,12 +48,12 @@ transformed parameters {
 
   for (c in 1:N_countries) {
     // Solve ODE for each country
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, alpha, N[c] + 0.0);
+    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, N[c] + 0.0);
     
     // Compute incidence
-    incidence[c, 1] = y[c, 1, 6];         // Initial incidence
+    incidence[c, 1] = y[c, 1, 5];         // Initial incidence
     for (i in 2:n_days) {
-      incidence[c, i] = y[c, i, 6] - y[c, i-1, 6];
+      incidence[c, i] = y[c, i, 5] - y[c, i-1, 5];
     }
   }
 }

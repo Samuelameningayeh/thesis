@@ -11,7 +11,7 @@ functions {
       real S = y[1];
       real E = y[2];
       real I = y[3];
-      real R = y[4];
+      real R = y[4]; 
       
       dydt[1] = -beta * I * S / N;
       dydt[2] = beta * I * S / N - gamma * E;
@@ -41,7 +41,7 @@ parameters {
 transformed parameters{
   array[n_days] vector[5] y;
   vector[n_days] incidence;
-  real<lower=0> phi = 1. / phi_inv;
+  real<lower=0> phi = 1./phi_inv;
   
   y = ode_rk45(seir, y0, t0, t, beta, sigma, gamma, N);
   

@@ -42,13 +42,13 @@ parameters {
 transformed parameters {  
   array[N_countries, n_days] vector[5] y;   // SEIR states for each country
   array[N_countries, n_days] real incidence; // Incidence for each country
-  real<lower=0> phi = 1.0 / phi_inv;       // Negative binomial dispersion
+  real<lower=0> phi = 1.0 /phi_inv;       // Negative binomial dispersion
   
   //reporting_rate = 0.8;
 
   for (c in 1:N_countries) {
     // Solve ODE for each country
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, N[c] + 0.0);
+    y[c] = ode_rk45(seir, y0[c],t0, t, beta[c], sigma, gamma, N[c]);
     
     // Compute incidence
     incidence[c, 1] = y[c, 1, 5];         // Initial incidence

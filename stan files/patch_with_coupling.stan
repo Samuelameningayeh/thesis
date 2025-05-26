@@ -1,15 +1,9 @@
 functions {
-  vector seird_coupled(real t,
-                       vector y,
-                       real[] beta,
-                       real sigma,
-                       real gamma,
-                       real alpha,
-                       real[] g,
-                       real[] r,
-                       real[,] m,
-                       real[] N,
-                       int n_countries) {
+  vector seird_coupled(real t, vector y, array[] real beta, real sigma, real gamma,
+                     real alpha, array[] real g, array[] real r, array[,] real m, 
+                     array[] real N, int n_countries)
+                      {
+
     vector[n_countries * 6 + n_countries * n_countries * 5] dydt; // Total states
     int idx = 1;
 
@@ -19,22 +13,23 @@ functions {
     vector[n_countries] I;
     vector[n_countries] R;
     vector[n_countries] D;
-    vector[n_countries] CumInc;
+    vector[n_countries] C;
+
     for (c in 1:n_countries) {
       S[c] = y[idx]; idx += 1;
       E[c] = y[idx]; idx += 1;
       I[c] = y[idx]; idx += 1;
       R[c] = y[idx]; idx += 1;
       D[c] = y[idx]; idx += 1;
-      CumInc[c] = y[idx]; idx += 1;
+      C[c] = y[idx]; idx += 1;
     }
 
     // Extract coupling states: S_ij, E_ij, I_ij, R_ij, D_ij for each i, j
-    vector[n_countries] S_ij[n_countries, n_countries];
-    vector[n_countries] E_ij[n_countries, n_countries];
-    vector[n_countries] I_ij[n_countries, n_countries];
-    vector[n_countries] R_ij[n_countries, n_countries];
-    vector[n_countries] D_ij[n_countries, n_countries];
+    array[n_countries, n_countries] real S_ij;
+    array[n_countries, n_countries] real E_ij;
+    array[n_countries, n_countries] real I_ij;
+    array[n_countries, n_countries] real R_ij;
+    array[n_countries, n_countries] real D_ij;
     
     for (i in 1:n_countries) {
       for (j in 1:n_countries) {
@@ -62,6 +57,7 @@ functions {
       real sum_rji_Eii = 0.0;
       real sum_rji_Iii = 0.0;
       real sum_rji_Rii = 0.0;
+
       for (j in 1:n_countries) {
         int r_idx = j * n_countries + i; // Index for r_ji
         sum_rji_Sii += r[r_idx] * S_ij[i, j];
@@ -103,7 +99,6 @@ functions {
         dydt[base_idx + 4] = alpha * I_ij[i, j] + g_m * D[i]; // D_ij'
       }
     }
-
     return dydt;
   }
 }
@@ -112,7 +107,7 @@ data {
   int<lower=1> N_countries;                // Number of countries (3)
   int<lower=1> n_days;                     // Number of time points
   array[N_countries] vector[6] y0;         // Initial conditions for each country (S, E, I, R, D, CumInc)
-  array[N_countries, N_countries] vector[5] y0_ij; // Initial conditions for coupling (S_ij, E_ij, I_ij, R_ij, D_ij)
+  array[N_countries, N_countries] vector[5] y0_ij;   // Initial conditions for coupling (S_ij, E_ij, I_ij, R_ij, D_ij)
   real t0;                                 // Initial time
   array[n_days] real t;                    // Time points
   array[N_countries] int N;                // Population sizes
@@ -138,7 +133,7 @@ transformed parameters {
 
   // Construct full initial state vector
   vector[N_countries * 6 + N_countries * N_countries * 5] y0_full;
-  int idx = 1;
+  {int idx = 1;
   for (c in 1:N_countries) {
     for (k in 1:6) {
       y0_full[idx] = y0[c][k];
@@ -153,15 +148,17 @@ transformed parameters {
       }
     }
   }
+  }
 
   // Solve ODE
   {
-    real theta[3] = {sigma, gamma, alpha};
+    array[3] real theta = {sigma, gamma, alpha};
     array[N_countries] real beta_arr = to_array_1d(beta);
     array[N_countries] real g_arr = to_array_1d(g);
     array[N_countries * N_countries] real r_arr = to_array_1d(r);
     array[N_countries] real N_arr = to_array_1d(to_vector(N));
-    real m[N_countries, N_countries]; // Movement matrix (fixed for simplicity)
+    array[N_countries, N_countries] real m; // Movement matrix (fixed for simplicity)
+
     for (i in 1:N_countries) {
       for (j in 1:N_countries) {
         m[i, j] = i == j ? 0.0 : 0.1 / (N_countries - 1); // Uniform movement
@@ -173,7 +170,7 @@ transformed parameters {
 
     // Extract states
     for (t_idx in 1:n_days) {
-      idx = 1;
+      int idx = 1;
       for (c in 1:N_countries) {
         for (k in 1:6) {
           y[c, t_idx][k] = y_full[t_idx][idx];
@@ -189,6 +186,7 @@ transformed parameters {
         }
       }
     }
+    
   }
 
   // Compute incidence
@@ -203,8 +201,8 @@ transformed parameters {
 model {
   // Priors
   beta ~ lognormal(log(0.35), 0.5);
-  sigma ~ lognormal(log(1.0/4), 0.5);
-  gamma ~ lognormal(log(1.0/6), 0.5);
+  sigma ~ lognormal(log(1.0/7), 0.5);
+  gamma ~ lognormal(log(1.0/10), 0.5);
   alpha ~ lognormal(log(0.01), 0.5); // Small death rate
   g ~ lognormal(log(0.1), 0.5); // Movement rate
   r ~ lognormal(log(0.2), 0.5); // Return rate
@@ -214,7 +212,7 @@ model {
   // Likelihood
   for (c in 1:N_countries) {
     for (i in 1:n_days) {
-      cases[c, i] ~ neg_binomial_2(max(reporting_rate[c] * incidence[c, i], 1e-10), phi);
+      cases[c, i] ~ neg_binomial_2((reporting_rate[c] * incidence[c, i]+1e-10), phi);
     }
   }
 }
@@ -227,7 +225,7 @@ generated quantities {
 
   for (c in 1:N_countries) {
     for (i in 1:n_days) {
-      pred_incidence[c, i] = neg_binomial_2_rng(max(reporting_rate[c] * incidence[c, i], 1e-10), phi);
+      pred_incidence[c, i] = neg_binomial_2_rng((reporting_rate[c] * incidence[c, i]+1e-10), phi);
     }
   }
 }

@@ -29,7 +29,7 @@ functions {
     array[n_countries, n_countries] real E_ij;
     array[n_countries, n_countries] real I_ij;
     array[n_countries, n_countries] real R_ij;
-    array[n_countries, n_countries] real D_ij;
+    array[n_countries, n_countries] real D_ij; 
     
     for (i in 1:n_countries) {
       for (j in 1:n_countries) {

@@ -79,12 +79,12 @@ model {
 }
 generated quantities {
   array[N_countries] real R0;   // Country-specific R0
-  real recovery_time = 1.0 / sigma;        // Shared recovery time
-  real incubation_period = 1.0 / gamma;    // Shared incubation period
+  real recovery_time = (1.0 / sigma)*7;        // Shared recovery time
+  real incubation_period = (1.0 / gamma)*7;    // Shared incubation period
   array[N_countries, n_days] real pred_incidence; // Predicted cases
 
   for (c in 1:N_countries) {
-    R0[c] = beta[c] / gamma;  // R0 including mortality
+    R0[c] = (beta[c] / gamma)*7;  // R0 including mortality
     
     for (i in 1:n_days) {
       pred_incidence[c, i] = neg_binomial_2_rng(reporting_rate*(incidence[c, i]+0.000001), phi);

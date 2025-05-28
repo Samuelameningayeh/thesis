@@ -68,7 +68,7 @@ model {
     cases[i] ~ neg_binomial_2(reporting_rate * incidence[i], phi);
 }
 generated quantities {
-  real R0 = beta / sigma;  // Final R0 formula from NGM
+  real R0 = beta / gamma;  // Final R0 formula from NGM
   array[n_patches] real recovery_time = 1 / sigma;
   array[n_patches] real incubation_period = 1 / gamma;
   array[n_patches, n_days] real pred_incidence;

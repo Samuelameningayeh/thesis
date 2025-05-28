@@ -63,7 +63,7 @@ model {
     cases ~ neg_binomial_2(reporting_rate*incidence+0.000001, phi);
 }
 generated quantities {
-  real R0 = beta / sigma;
+  real R0 = beta / gamma;
   real recovery_time = 1 / sigma;
   real incubation_period = 1 / gamma;
 

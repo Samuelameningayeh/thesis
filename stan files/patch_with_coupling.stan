@@ -218,7 +218,7 @@ model {
 }
 
 generated quantities {
-  vector[N_countries] R0 = beta / sigma;
+  vector[N_countries] R0 = beta / gamma;
   real recovery_time = 1.0 / gamma;
   real incubation_period = 1.0 / sigma;
   array[N_countries, n_days] real pred_incidence;

@@ -36,16 +36,17 @@ parameters {
   real<lower=0> beta;
   real<lower=0> gamma;
   real<lower=0> phi_inv;
-  real<lower=0,upper=1> reporting_rate;
+  //real<lower=0,upper=1> reporting_rate;
 }
 transformed parameters{
+  real<lower=0,upper=1> reporting_rate;
   array[n_days] vector[5] y;
   vector[n_days] incidence;
   real<lower=0> phi = 1./phi_inv;
   
   y = ode_rk45(seir, y0, t0, t, beta, sigma, gamma, N);
 
-  //reporting_rate = 0.8;
+  reporting_rate = 0.8;
 
   incidence[1] = y[1, 5] - 0;
   for (i in 2:n_days)
@@ -57,13 +58,13 @@ model {
     sigma ~ lognormal(1.0 / 10, 0.5);   // Prior mean: 10-day incubation period
     gamma ~ lognormal(1.0/7, 0.5);   // Prior mean: 7-day infectious period 
     phi_inv ~ exponential(2);
-    reporting_rate ~ beta(2, 2);
+    //reporting_rate ~ beta(2, 2);
     
     //sampling distribution
     cases ~ neg_binomial_2(reporting_rate*incidence+0.000001, phi);
 }
 generated quantities {
-  real R0 = beta / sigma;
+  real R0 = beta*7 / sigma;
   real recovery_time = 1 / sigma;
   real incubation_period = 1 / gamma;
 

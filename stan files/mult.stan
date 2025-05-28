@@ -30,11 +30,7 @@ data {
   array[n_days] real t;                    // Time points
   array[N_countries] int N;                // Population sizes
   array[N_countries, n_days] int<lower=0> cases; // Observed cases for each country
-  real<lower=0, upper=1> reporting_rate;
   array[N_countries] real beta_values; 
-  array[N_countries] real sigma;                     // Shared recovery rate
-  //real<lower=0> alpha;
-  array[N_countries] real gamma; 
 }
 parameters {
   //real<lower=0,upper=1> reporting_rate; 
@@ -45,7 +41,8 @@ parameters {
   real<lower=0> gamma;                     // Shared progression rate (E to I)
   real<lower=0> phi_inv;                   // Negative binomial overdispersion
 }
-transformed parameters {  
+transformed parameters { 
+  real<lower=0, upper=1> reporting_rate;
   array[N_countries, n_days] vector[5] y;   // SEIR states for each country
   array[N_countries, n_days] real incidence; // Incidence for each country
   real<lower=0> phi = 1.0 /phi_inv;       // Negative binomial dispersion
@@ -66,10 +63,10 @@ transformed parameters {
 model {
   // Priors
   for (p in 1:N_countries) {
-    beta[p] ~ lognormal(log(beta_values[p]*7), 0.5);
-    //alpha ~ lognormal(log(0.3*7), 0.2);
-    sigma ~ lognormal(log(1.0/10*7), 0.5);      // Prior mean: 10-day recovery period
-    gamma ~ lognormal(log(1.0/7*7), 0.5);      // Prior mean: 7-day incubation period
+    beta[p] ~ lognormal(log(beta_values[p]), 0.5);
+    //alpha ~ lognormal(log(0.3), 0.2);
+    sigma ~ lognormal(log(1.0/10), 0.5);      // Prior mean: 10-day recovery period
+    gamma ~ lognormal(log(1.0/7), 0.5);      // Prior mean: 7-day incubation period
     phi_inv ~ exponential(5);
     reporting_rate ~ beta(2, 2);             // Centered around 0.8
   }
@@ -88,12 +85,12 @@ model {
 }
 generated quantities {
   array[N_countries] real R0;   // Country-specific R0
-  real recovery_time = 1.0 / sigma;        // Shared recovery time
-  real incubation_period = 1.0 / gamma;    // Shared incubation period
+  real recovery_time = 1.0 / sigma*7;        // Shared recovery time
+  real incubation_period = 1.0 / gamma*7;    // Shared incubation period
   array[N_countries, n_days] real pred_incidence; // Predicted cases
 
   for (c in 1:N_countries) {
-    R0[c] = beta[c] / gamma;  // R0 including mortality
+    R0[c] = beta[c]*7 / gamma*7;  // R0 including mortality
     
     for (i in 1:n_days) {
       pred_incidence[c, i] = neg_binomial_2_rng(reporting_rate*(incidence[c, i]+0.000001), phi);

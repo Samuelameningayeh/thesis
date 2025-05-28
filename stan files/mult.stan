@@ -14,7 +14,7 @@ functions {
 
     dydt[1] = -beta * I * S / N;              // dS/dt
     dydt[2] = beta * I * S / N - gamma * E;   // dE/dt
-    dydt[3] = gamma * E - (sigma) * I;          // dI/dt
+    dydt[3] = gamma * E - sigma * I;          // dI/dt
     dydt[4] = sigma * I;                      // dR/dt
     //dydt[5] = alpha * I;  
     dydt[5] = gamma * E;                      // Cumulative incidence
@@ -31,27 +31,27 @@ data {
   array[N_countries] int N;                // Population sizes
   array[N_countries, n_days] int<lower=0> cases; // Observed cases for each country
   array[N_countries] real beta_values; 
+  array[N_countries] real sigma_values; 
+  array[N_countries] real gamma_values; 
+  real<lower=0,upper=1> reporting_rate; 
 }
 parameters {
-  //real<lower=0,upper=1> reporting_rate; 
-
   array[N_countries] real beta;       // Country-specific transmission rates
-  real<lower=0> sigma;                     // Shared recovery rate
+  array[N_countries] real sigma;                     // Shared recovery rate
   //real<lower=0> alpha;
-  real<lower=0> gamma;                     // Shared progression rate (E to I)
+  array[N_countries] real gamma;                     // Shared progression rate (E to I)
   real<lower=0> phi_inv;                   // Negative binomial overdispersion
 }
 transformed parameters { 
-  real<lower=0, upper=1> reporting_rate;
   array[N_countries, n_days] vector[5] y;   // SEIR states for each country
   array[N_countries, n_days] real incidence; // Incidence for each country
   real<lower=0> phi = 1.0 /phi_inv;       // Negative binomial dispersion
   
-  reporting_rate = 0.8;
+  //reporting_rate = 0.8;
 
   for (c in 1:N_countries) {
     // Solve ODE for each country
-    y[c] = ode_rk45(seir, y0[c],t0, t, beta[c], sigma, gamma, N[c]);
+    y[c] = ode_rk45(seir, y0[c],t0, t, beta[c], sigma[c], gamma[c], N[c], 1e-6, 1e-5, 1e6);
     
     // Compute incidence
     incidence[c, 1] = y[c, 1, 5];         // Initial incidence
@@ -65,15 +65,15 @@ model {
   for (p in 1:N_countries) {
     beta[p] ~ lognormal(log(beta_values[p]), 0.5);
     //alpha ~ lognormal(log(0.3), 0.2);
-    sigma ~ lognormal(log(1.0/10), 0.5);      // Prior mean: 10-day recovery period
-    gamma ~ lognormal(log(1.0/7), 0.5);      // Prior mean: 7-day incubation period
+    sigma[p] ~ lognormal(log(sigma_values[p]), 0.5);      // Prior mean: 10-day recovery period
+    gamma[p] ~ lognormal(log(gamma_values[p]), 0.5);      // Prior mean: 7-day incubation period
     phi_inv ~ exponential(5);
-    reporting_rate ~ beta(2, 2);             // Centered around 0.8
+    //reporting_rate ~ beta(2, 2);             // Centered around 0.8
   }
-  //alpha ~ lognormal(log(0.3*7), 0.2);
-  //sigma ~ lognormal(log(1.0/10*7), 0.5);      // Prior mean: 10-day recovery period
-  //gamma ~ lognormal(log(1.0/7*7), 0.5);      // Prior mean: 7-day incubation period
-  //phi_inv ~ exponential(5*7);
+  //alpha ~ lognormal(log(0.3), 0.2);
+  //sigma ~ lognormal(log(1.0/10), 0.5);      // Prior mean: 10-day recovery period
+  //gamma ~ lognormal(log(1.0/7), 0.5);      // Prior mean: 7-day incubation period
+  //phi_inv ~ exponential(5);
   //reporting_rate ~ beta(2, 2);             // Centered around 0.8
 
   // Likelihood
@@ -85,12 +85,14 @@ model {
 }
 generated quantities {
   array[N_countries] real R0;   // Country-specific R0
-  real recovery_time = 1.0 / sigma*7;        // Shared recovery time
-  real incubation_period = 1.0 / gamma*7;    // Shared incubation period
+  array[N_countries] real recovery_time;        // Shared recovery time
+  array[N_countries] real incubation_period;    // Shared incubation period
   array[N_countries, n_days] real pred_incidence; // Predicted cases
 
   for (c in 1:N_countries) {
-    R0[c] = beta[c]*7 / gamma*7;  // R0 including mortality
+    recovery_time[c] = 1.0 / sigma[c];        // Shared recovery time
+    incubation_period[c] = 1.0 / gamma[c]; 
+    R0[c] = beta[c] / gamma[c];  // R0 including mortality
     
     for (i in 1:n_days) {
       pred_incidence[c, i] = neg_binomial_2_rng(reporting_rate*(incidence[c, i]+0.000001), phi);

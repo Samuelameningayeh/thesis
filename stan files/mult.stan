@@ -50,7 +50,7 @@ transformed parameters {
 
   for (c in 1:N_countries) {
     // Solve ODE for each country
-    y[c] = ode_rk45(seir, y0[c],t0, t, beta[c], sigma, gamma, N[c]);
+    y[c] = ode_bdf(seir, y0[c],t0, t, beta[c], sigma, gamma, N[c]);
     
     // Compute incidence
     incidence[c, 1] = y[c, 1, 5];         // Initial incidence
@@ -84,7 +84,7 @@ generated quantities {
   array[N_countries, n_days] real pred_incidence; // Predicted cases
 
   for (c in 1:N_countries) {
-    R0[c] = beta[c]*7 / gamma;  // R0 including mortality
+    R0[c] = beta[c] / gamma;  // R0 including mortality
     
     for (i in 1:n_days) {
       pred_incidence[c, i] = neg_binomial_2_rng(reporting_rate*(incidence[c, i]+0.000001), phi);

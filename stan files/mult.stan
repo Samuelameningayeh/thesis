@@ -6,20 +6,24 @@ functions {
               real gamma,
               real N) {
     vector[5] dydt;
+    //vector[6] dydt;
     real S = y[1];
     real E = y[2];
     real I = y[3];
     real R = y[4];
+    //real D = y[5];
 
     dydt[1] = -beta * I * S / N;              // dS/dt (weekly)
     dydt[2] = beta * I * S / N - sigma * E;   // dE/dt (weekly)
     dydt[3] = sigma * E - gamma * I;          // dI/dt (weekly)
     dydt[4] = gamma * I;                      // dR/dt (weekly)
+    //dydt[5] = alpha * I;
     dydt[5] = sigma * E;                      // Cumulative incidence (weekly)
 
     return dydt;
   }
 }
+
 data {
   int<lower=1> N_countries;                // Number of countries (3)
   int<lower=1> n_weeks;                    // Number of weeks
@@ -33,12 +37,14 @@ data {
   array[N_countries] real gamma_values;    // Daily gamma values
   real<lower=0, upper=1> reporting_rate;
 }
+
 parameters {
   array[N_countries] real<lower=0> beta;       // Country-specific transmission rates (weekly)
   array[N_countries] real<lower=0> sigma;      // Country-specific recovery rate (weekly)
   array[N_countries] real<lower=0> gamma;      // Country-specific progression rate (E to I, weekly)
   real<lower=0> phi_inv;                       // Negative binomial overdispersion
 }
+
 transformed parameters {
   array[N_countries, n_weeks] vector[5] y;   // Weekly SEIR states for each country
   array[N_countries, n_weeks] real weekly_incidence; // Weekly incidence for each country
@@ -47,7 +53,7 @@ transformed parameters {
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c]/ 7.0, sigma[c]/ 7.0, gamma[c]/ 7.0, N[c]);
+    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma[c], gamma[c], N[c]);
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
@@ -57,19 +63,23 @@ transformed parameters {
     }
   }
 }
+
 model {
-  // Priors (rescaled to weekly rates)
+  // PRIORS (rescaled to weekly rates)
   for (p in 1:N_countries) {
-    beta[p] ~ lognormal(log(beta_values[p]), 0.5);    // Weekly beta = daily beta / 7
-    sigma[p] ~ lognormal(log(sigma_values[p]), 0.5);  // Weekly sigma = daily sigma / 7
-    gamma[p] ~ lognormal(log(gamma_values[p]), 0.5);  // Weekly gamma = daily gamma / 7
+    beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
+    sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
+    gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
   }
   phi_inv ~ exponential(5);
+
+  // LIKELIHOOD
   for (p in 1:N_countries) {
     // Vectorized likelihood (weekly)
-    cases[p] ~ neg_binomial_2(weekly_incidence[p], phi);
+    cases[p] ~ neg_binomial_2(adjusted_incidence[p], phi);
   }
 }
+
 generated quantities {
   array[N_countries] real R0;   // Country-specific R0 (weekly)
   array[N_countries] real recovery_time;        // Recovery time (weeks)
@@ -81,6 +91,7 @@ generated quantities {
     recovery_time[c] = (1.0 / gamma[c]);        // Weeks
     incubation_period[c] = (1.0 / sigma[c]);    // Weeks
   }
+
   for (c in 1:N_countries) {
     pred_incidence[c] = neg_binomial_2_rng(weekly_incidence[c], phi);
   }

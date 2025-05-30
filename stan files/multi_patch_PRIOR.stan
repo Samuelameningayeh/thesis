@@ -57,6 +57,7 @@ transformed parameters {
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
+      adjusted_incidence[c, 1] = reporting_rate * weekly_incidence[c, 1]+0.000005;
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
       adjusted_incidence[c, w] = reporting_rate * weekly_incidence[c, w]+0.000005;
@@ -87,6 +88,6 @@ generated quantities {
   }
 
   for (c in 1:N_countries) {
-    pred_incidence[c] = neg_binomial_2_rng(weekly_incidence[c], phi);
+    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
   }
 }

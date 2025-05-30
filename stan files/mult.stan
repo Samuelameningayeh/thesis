@@ -53,13 +53,15 @@ transformed parameters {
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma[c], gamma[c], N[c]);
+    y[c] = ode_bdf(seir, y0[c], t0, t, beta[c], sigma[c], gamma[c], N[c]);
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
+    adjusted_incidence[c,1] = (reporting_rate * weekly_incidence[c,1])+0.00005;
+
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
-      adjusted_incidence[c, w] = reporting_rate * weekly_incidence[c, w]+0.000005;
+      adjusted_incidence[c, w] = (reporting_rate * weekly_incidence[c, w])+0.00005;
     }
   }
 }
@@ -71,7 +73,7 @@ model {
     sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
     gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
   }
-  phi_inv ~ exponential(5);
+  phi_inv ~ exponential(2);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {
@@ -93,6 +95,6 @@ generated quantities {
   }
 
   for (c in 1:N_countries) {
-    pred_incidence[c] = neg_binomial_2_rng(weekly_incidence[c], phi);
+    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
   }
 }

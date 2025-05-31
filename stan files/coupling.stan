@@ -1,173 +1,143 @@
 functions {
-  vector seir_patch(real t, vector y, array[] real theta, array[] real x_r, array[] int x_i) {
-    int P = x_i[1];               // Number of patches
-    array[P] int N = x_i[2:P+1];  // Population sizes
-    
-    real sigma = theta[1];        // Incubation rate
-    real gamma = theta[2];        // Recovery rate
-    real mu = theta[3];           // Mortality rate
-    array[P] real beta = theta[4:3+P];  // Transmission rates
-    
-    // Mobility matrix (passed as parameter)
-    matrix[P, P] mobility = to_matrix(theta[4+P:], P, P);
-    
-    vector[6 * P] dydt;  // Derivatives for S, E, I, R, D, C
-    
-    for (p in 1:P) {
-      real S_p = y[1 + 6*(p-1)];
-      real E_p = y[2 + 6*(p-1)];
-      real I_p = y[3 + 6*(p-1)];
-      real R_p = y[4 + 6*(p-1)];
-      real D_p = y[5 + 6*(p-1)];
-      real C_p = y[6 + 6*(p-1)];  // Cumulative infections
-      
-      real new_infections = beta[p] * S_p * I_p / N[p];
-      real new_infectious = sigma * E_p;
-      real new_deaths = mu * I_p;
-      
-      real dS_in = 0.0, dE_in = 0.0, dI_in = 0.0, dR_in = 0.0, dD_in = 0.0, dC_in = 0.0;
-      real dS_out = 0.0, dE_out = 0.0, dI_out = 0.0, dR_out = 0.0, dD_out = 0.0, dC_out = 0.0;
-      
-      for (k in 1:P) {
-        if (k != p) {
-          dS_out += mobility[p, k] * S_p;
-          dE_out += mobility[p, k] * E_p;
-          dI_out += mobility[p, k] * I_p;
-          dR_out += mobility[p, k] * R_p;
-          dD_out += mobility[p, k] * D_p;
-          dC_out += mobility[p, k] * C_p;
-          
-          real S_k = y[1 + 6*(k-1)];
-          real E_k = y[2 + 6*(k-1)];
-          real I_k = y[3 + 6*(k-1)];
-          real R_k = y[4 + 6*(k-1)];
-          real D_k = y[5 + 6*(k-1)];
-          real C_k = y[6 + 6*(k-1)];
-          
-          dS_in += mobility[k, p] * S_k;
-          dE_in += mobility[k, p] * E_k;
-          dI_in += mobility[k, p] * I_k;
-          dR_in += mobility[k, p] * R_k;
-          dD_in += mobility[k, p] * D_k;
-          dC_in += mobility[k, p] * C_k;
-        }
+  vector seir(real t,
+              vector y,
+              array[] real beta_ii,  // Within-patch transmission rates
+              array[,] real beta_ij, // Between-patch transmission rates
+              array[] real sigma,
+              array[] real gamma,
+              array[] real N,
+              int N_countries) {
+    vector[5 * N_countries] dydt;  // 5 compartments per patch (S, E, I, R, Cumulative Incidence)
+
+    // Loop over each patch
+    for (i in 1:N_countries) {
+      real S_i = y[5 * (i-1) + 1];  // S_i
+      real E_i = y[5 * (i-1) + 2];  // E_i
+      real I_i = y[5 * (i-1) + 3];  // I_i
+      real R_i = y[5 * (i-1) + 4];  // R_i
+
+      // Compute the coupling term: sum over all patches j
+      real coupling_term = 0.0;
+      for (j in 1:N_countries) {
+        real I_j = y[5 * (j-1) + 3];  // I_j from patch j
+        coupling_term += beta_ij[i, j] * S_i * I_j / N[j];
       }
-      
-      dydt[1 + 6*(p-1)] = -new_infections + dS_in - dS_out;  // dS/dt
-      dydt[2 + 6*(p-1)] = new_infections - new_infectious + dE_in - dE_out;  // dE/dt
-      dydt[3 + 6*(p-1)] = new_infectious - (gamma + mu) * I_p + dI_in - dI_out;  // dI/dt
-      dydt[4 + 6*(p-1)] = gamma * I_p + dR_in - dR_out;  // dR/dt
-      dydt[5 + 6*(p-1)] = new_deaths + dD_in - dD_out;  // dD/dt
-      dydt[6 + 6*(p-1)] = new_infectious + dC_in - dC_out;  // dC/dt
+
+      // SEIR equations with coupling
+      real dS_i_dt = -coupling_term;  // S_i' = -sum_j(beta_ij * S_i * I_j / N_j)
+      real dE_i_dt = coupling_term - sigma[i] * E_i;  // E_i' = sum_j(beta_ij * S_i * I_j / N_j) - sigma_i * E_i
+      real dI_i_dt = sigma[i] * E_i - gamma[i] * I_i;  // I_i' = sigma_i * E_i - gamma_i * I_i
+      real dR_i_dt = gamma[i] * I_i;  // R_i' = gamma_i * I_i
+
+      // Assign derivatives
+      dydt[5 * (i-1) + 1] = dS_i_dt;
+      dydt[5 * (i-1) + 2] = dE_i_dt;
+      dydt[5 * (i-1) + 3] = dI_i_dt;
+      dydt[5 * (i-1) + 4] = dR_i_dt;
+      dydt[5 * (i-1) + 5] = sigma[i] * E_i;  // Cumulative incidence
     }
-    
+
     return dydt;
   }
 }
 
 data {
-  int<lower=1> P;               // Number of patches
-  int<lower=1> T;               // Time points
-  real t0;                      // Initial time
-  array[T] real ts;             // Observation times
-  array[T, P] int<lower=0> cases; // Observed incidence
-  array[P] int<lower=1> N;      // Population sizes
-  array[P] real<lower=0> E0;    // Initial exposed
-  array[P] real<lower=0> I0;    // Initial infected
-}
-
-transformed data {
-  array[6 * P] real y0;         // Initial state (S1, E1, I1, R1, D1, C1, ..., SP, EP, IP, RP, DP, CP)
-  array[0] real x_r;            // No real-valued auxiliary data
-  array[P + 1] int x_i;         // x_i[1] = P, x_i[2:P+1] = N[1:P]
-  
-  x_i[1] = P;
-  for (p in 1:P) {
-    x_i[p + 1] = N[p];
-    y0[1 + 6*(p-1)] = N[p] - E0[p] - I0[p];  // S_p(0)
-    y0[2 + 6*(p-1)] = E0[p];                 // E_p(0)
-    y0[3 + 6*(p-1)] = I0[p];                 // I_p(0)
-    y0[4 + 6*(p-1)] = 0;                     // R_p(0)
-    y0[5 + 6*(p-1)] = 0;                     // D_p(0)
-    y0[6 + 6*(p-1)] = 0;                     // C_p(0)
-  }
+  int<lower=1> N_countries;                // Number of patches (countries)
+  int<lower=1> n_weeks;                    // Number of weeks
+  array[N_countries] vector[5] y0;         // Initial conditions for each patch
+  real t0;                                 // Initial time
+  array[n_weeks] real t;                   // Time points (weekly: 0, 1, 2, ...)
+  array[N_countries] int N;                // Population sizes
+  array[N_countries, n_weeks] int<lower=0> cases; // Observed weekly cases for each patch
+  array[N_countries] real beta_values;     // Daily within-patch beta values (prior means)
+  array[N_countries, N_countries] real beta_ij_values; // Daily between-patch beta values (prior means)
+  array[N_countries] real sigma_values;    // Daily sigma values
+  array[N_countries] real gamma_values;    // Daily gamma values
+  real<lower=0, upper=1> reporting_rate;
 }
 
 parameters {
-  real<lower=0> sigma;          // Incubation rate
-  real<lower=0> gamma;          // Recovery rate
-  real<lower=0> mu;             // Mortality rate
-  array[P] real<lower=0> beta;  // Transmission rates
-  matrix<lower=0>[P, P] mobility;  // Mobility matrix
-  real<lower=0> phi_inv;        // Inverse dispersion
-  array[P] real<lower=0, upper=1> rho;  // Reporting rates
+  array[N_countries] real<lower=0> beta_ii;    // Within-patch transmission rates (weekly)
+  array[N_countries, N_countries] real<lower=0> beta_ij; // Between-patch transmission rates (weekly)
+  array[N_countries] real<lower=0> sigma;      // Progression rates (E to I, weekly)
+  array[N_countries] real<lower=0> gamma;      // Recovery rates (weekly)
+  real<lower=0> phi_inv;                       // Negative binomial overdispersion
 }
 
 transformed parameters {
-  array[T, P] real incidence;
-  real<lower=0> phi = 1.0 / phi_inv;
-  array[3 + P + P*P] real theta;  // theta = [sigma, gamma, mu, beta[1:P], mobility[P, P]]
-  
-  theta[1] = sigma;
-  theta[2] = gamma;
-  theta[3] = mu;
-  for (p in 1:P) {
-    theta[3 + p] = beta[p];
-  }
-  for (i in 1:P) {
-    for (j in 1:P) {
-      theta[3 + P + (i-1)*P + j] = mobility[i, j];
+  array[N_countries, n_weeks] vector[5] y;   // Weekly SEIR states for each patch
+  array[N_countries, n_weeks] real weekly_incidence; // Weekly incidence for each patch
+  real<lower=0> phi = 1.0 / phi_inv;         // Negative binomial dispersion
+  array[N_countries, n_weeks] real adjusted_incidence;
+
+  // Flatten y for ODE solver
+  vector[5 * N_countries] y0_flat;
+  for (c in 1:N_countries) {
+    for (i in 1:5) {
+      y0_flat[5 * (c-1) + i] = y0[c][i];
     }
   }
-  
-  // Solve ODE for all patches
-  array[T] vector[6 * P] y_pred = ode_rk45(seir_patch, to_vector(y0), t0, ts, theta, x_r, x_i);
-  
-  // Compute incidence as new infections scaled by reporting rate
-  for (p in 1:P) {
-    for (t in 1:T) {
-      real E_p = y_pred[t, 2 + 6*(p-1)];  // Exposed at time t
-      incidence[t, p] = sigma * E_p * rho[p];  // Incidence = new infectious cases * reporting rate
+
+  // Solve ODE at weekly intervals with rescaled rates
+  {
+    array[N_countries, n_weeks] vector[5 * N_countries] y_flat;
+    y_flat = ode_rk45(seir, y0_flat, t0, t, beta_ii, beta_ij, sigma, gamma, N, N_countries);
+
+    // Reshape y_flat back to y
+    for (c in 1:N_countries) {
+      for (w in 1:n_weeks) {
+        for (i in 1:5) {
+          y[c, w, i] = y_flat[c, w, 5 * (c-1) + i];
+        }
+      }
+    }
+  }
+
+  // Compute weekly incidence
+  for (c in 1:N_countries) {
+    weekly_incidence[c, 1] = y[c, 1, 5];  // Initial incidence
+    adjusted_incidence[c, 1] = (reporting_rate * weekly_incidence[c, 1]) + 0.00005;
+
+    for (w in 2:n_weeks) {
+      weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
+      adjusted_incidence[c, w] = (reporting_rate * weekly_incidence[c, w]) + 0.00005;
     }
   }
 }
 
 model {
-  // Priors
-  sigma ~ lognormal(log(1.0/7), 0.2);  // Latent period ~5 days
-  gamma ~ lognormal(log(1.0/10), 0.3); // Infectious period ~10 days
-  mu ~ lognormal(log(0.1), 0.2);       // Mortality rate ~50% over 10 days
-  for (p in 1:P) {
-    beta[p] ~ lognormal(log(0.3), 0.2);
-    rho[p] ~ beta(1, 1);  // Uniform prior on reporting rate
+  // PRIORS (rescaled to weekly rates)
+  for (p in 1:N_countries) {
+    beta_ii[p] ~ lognormal(log(beta_values[p]), 0.3);  // Within-patch beta
+    sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma
+    gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma
   }
-  for (i in 1:P) {
-    for (j in 1:P) {
-      mobility[i, j] ~ exponential(1);  // Sparse mobility
+  for (i in 1:N_countries) {
+    for (j in 1:N_countries) {
+      beta_ij[i, j] ~ lognormal(log(beta_ij_values[i, j]), 0.3);  // Between-patch beta
     }
   }
-  phi_inv ~ exponential(5);
-  
-  // Likelihood
-  for (p in 1:P) {
-    cases[:, p] ~ neg_binomial_2(incidence[:, p], phi);
+  phi_inv ~ exponential(2);
+
+  // LIKELIHOOD
+  for (p in 1:N_countries) {
+    cases[p] ~ neg_binomial_2(adjusted_incidence[p], phi);
   }
 }
 
 generated quantities {
-  array[P] real R0;              // Patch-specific R0
-  array[T, P] real predicted_cases; // Posterior predictive
-  array[T, P] real Rt;           // Effective reproduction number
-  
-  for (p in 1:P) {
-    R0[p] = beta[p] / (gamma + mu);  // R0 including mortality
+  array[N_countries] real R0;   // Patch-specific R0 (weekly, within-patch only)
+  array[N_countries] real recovery_time;        // Recovery time (weeks)
+  array[N_countries] real incubation_period;    // Incubation period (weeks)
+  array[N_countries, n_weeks] real pred_incidence; // Predicted weekly cases
+
+  for (c in 1:N_countries) {
+    R0[c] = (beta_ii[c] / gamma[c]);  // R0 based on within-patch transmission
+    recovery_time[c] = (1.0 / gamma[c]);        // Weeks
+    incubation_period[c] = (1.0 / sigma[c]);    // Weeks
   }
-  
-  for (p in 1:P) {
-    for (t in 1:T) {
-      real S_p = y_pred[t, 1 + 6*(p-1)];  // Susceptibles at time t
-      predicted_cases[t, p] = neg_binomial_2_rng(incidence[t, p], phi);
-      Rt[t, p] = R0[p] * S_p / N[p];  // Rt = R0 * fraction susceptible
-    }
+
+  for (c in 1:N_countries) {
+    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
   }
 }

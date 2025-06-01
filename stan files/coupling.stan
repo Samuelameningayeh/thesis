@@ -15,6 +15,7 @@ functions {
       real E_i = y[5 * (i-1) + 2];  // E_i
       real I_i = y[5 * (i-1) + 3];  // I_i
       real R_i = y[5 * (i-1) + 4];  // R_i
+      real D_i = y[5 * (i-1) + 5];  // D_i
 
       // Compute the coupling term: sum over all patches j
       real coupling_term = 0.0;
@@ -79,10 +80,10 @@ transformed parameters {
   }
 
   // Solve ODE at weekly intervals with rescaled rates
-  {
+  for (i in 1:N_countries){
     array[N_countries, n_weeks] vector[5 * N_countries] y_flat;
-    y_flat = ode_rk45(seir, y0_flat, t0, t, beta_ii, beta_ij, sigma, gamma, N, N_countries);
-
+    y_flat[i] = ode_rk45(seir, y0_flat[i], t0, t, beta_ii[i], beta_ij[i], sigma[i], gamma[i], N[i], N_countries);
+  }
     // Reshape y_flat back to y
     for (c in 1:N_countries) {
       for (w in 1:n_weeks) {
@@ -91,7 +92,7 @@ transformed parameters {
         }
       }
     }
-  }
+
 
   // Compute weekly incidence
   for (c in 1:N_countries) {

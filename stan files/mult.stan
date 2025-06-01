@@ -53,7 +53,7 @@ transformed parameters {
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma[c], gamma[c], N[c]);
+    y[c] = ode_bdf(seir, y0[c], t0, t, beta[c], sigma[c], gamma[c], N[c]);
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence

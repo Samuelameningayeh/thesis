@@ -2,7 +2,7 @@
 functions{
   vector seir(real t,
               vector y,
-              vector beta,
+              array[] real beta,
               real sigma,
               real gamma,
               real N) {
@@ -42,7 +42,7 @@ data {
 }
 
 parameters {
-  matrix<lower=0>[N_patches, N_patches] beta; // Patch-specific transmission rates (weekly)
+  array[N_patches, N_patches] real <lower=0> beta; // Patch-specific transmission rates (weekly)
   array[N_patches] real<lower=0> sigma;      // Patch-specific progression rate (E to I, weekly)
   array[N_patches] real<lower=0> gamma;      // Patch-specific recovery rate (weekly)
   real<lower=0> phi_inv;                     // Negative binomial overdispersion

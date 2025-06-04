@@ -23,7 +23,7 @@ functions {
   }
 }
 data {
-  int<lower=1> n_days;
+  int<lower=1>n_days;
   vector[5] y0;
   real t0;
   array[n_days] real t;

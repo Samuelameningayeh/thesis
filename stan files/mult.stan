@@ -90,7 +90,7 @@ generated quantities {
 
   for (c in 1:N_countries) {
     R0[c] = (beta[c] / gamma[c]);  // R0 based on weekly rates
-    recovery_time[c] = (1.0 / gamma[c]);        // Weeks
+    recovery_time[c] = (1.0 / gamma[c]);      // Weeks
     incubation_period[c] = (1.0 / sigma[c]);    // Weeks
   }
 

@@ -9,26 +9,26 @@ functions {
     vector N                       // population for each patch
   ) {
     int n_patches = 3;
-    vector[12] dydt;
+    vector[15] dydt;
     for (p in 1:n_patches) {
-      real S_p = y[4*(p-1)+1];
-      real E_p = y[4*(p-1)+2];
-      real I_p = y[4*(p-1)+3];
-      real R_p = y[4*(p-1)+4];
-      real D_p = y[4*(p-1)+5];
+      real S_p = y[5*(p-1)+1];
+      real E_p = y[5*(p-1)+2];
+      real I_p = y[5*(p-1)+3];
+      real R_p = y[5*(p-1)+4];
+      real D_p = y[5*(p-1)+5];
 
       // Force of infection from all patches
       real inf_sum = 0;
       for (j in 1:n_patches) {
-        real I_j = y[4*(j-1)+3];
+        real I_j = y[5*(j-1)+3];
         inf_sum += beta_mat[p, j] * S_p * I_j / N[j];
       }
 
-      dydt[4*(p-1)+1] = -inf_sum;                        // dS_p/dt
-      dydt[4*(p-1)+2] = inf_sum - sigma[p] * E_p;        // dE_p/dt
-      dydt[4*(p-1)+3] = sigma[p] * E_p - gamma[p] * I_p - alpha[p] * I_p; // dI_p/dt
-      dydt[4*(p-1)+4] = gamma[p] * I_p;                  // dR_p/dt
-      dydt[4*(p-1)+5] = alpha[p] * I_p
+      dydt[5*(p-1)+1] = -inf_sum;                        // dS_p/dt
+      dydt[5*(p-1)+2] = inf_sum - sigma[p] * E_p;        // dE_p/dt
+      dydt[5*(p-1)+3] = sigma[p] * E_p - gamma[p] * I_p - alpha[p] * I_p; // dI_p/dt
+      dydt[5*(p-1)+4] = gamma[p] * I_p;                  // dR_p/dt
+      dydt[5*(p-1)+5] = alpha[p] * I_p
     }
     return dydt;
   }
@@ -37,7 +37,7 @@ functions {
 data {
   int<lower=1> N_patches;           // 3 (Guinea, Liberia, Sierra Leone)
   int<lower=1> n_weeks;             
-  vector[5*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
+  vector[6*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
   real t0;                         
   array[n_weeks] real t;            
   vector[N_patches] N;              // Population for each patch
@@ -67,10 +67,10 @@ transformed parameters {
 
   for (p in 1:N_patches) {
     // Weekly incidence: number progressing E->I (new infections)
-    weekly_incidence[p, 1] = sigma[p] * y[1, 4*(p-1)+2];
+    weekly_incidence[p, 1] = sigma[p] * y[1, 5*(p-1)+2];
     adjusted_incidence[p, 1] = reporting_rate * weekly_incidence[p, 1] + 0.0001;
     for (w in 2:n_weeks) {
-      weekly_incidence[p, w] = sigma[p] * y[w-1, 4*(p-1)+2];
+      weekly_incidence[p, w] = sigma[p] * y[w-1, 5*(p-1)+2];
       adjusted_incidence[p, w] = reporting_rate * weekly_incidence[p, w] + 0.0001;
     }
   }

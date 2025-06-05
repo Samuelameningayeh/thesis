@@ -7,7 +7,7 @@ functions {
              real alpha,
              real N) {
 
-      vector[5] dydt;
+      vector[6] dydt;
 
       real S = y[1];
       real E = y[2];
@@ -27,7 +27,7 @@ functions {
 }
 data {
   int<lower=1>n_days;
-  vector[5] y0;
+  vector[6] y0;
   real t0;
   array[n_days] real t;
   int N;
@@ -43,7 +43,7 @@ parameters {
   real<lower=0> sigma;
   real<lower=0> beta;
   real<lower=0> gamma;
-  real<lower=0> gamma;
+  real<lower=0> alpha;
   real<lower=0> phi_inv;
 }
 transformed parameters{

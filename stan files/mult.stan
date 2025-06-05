@@ -6,8 +6,8 @@ functions {
               real gamma,
               real alpha,
               real N) {
-    vector[5] dydt;
-    //vector[6] dydt;
+    //vector[5] dydt;
+    vector[6] dydt;
     real S = y[1];
     real E = y[2];
     real I = y[3];

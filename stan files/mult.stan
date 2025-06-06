@@ -16,7 +16,7 @@ functions {
 
     dydt[1] = -beta * I * S / N;              // dS/dt (weekly)
     dydt[2] = beta * I * S / N - sigma * E;   // dE/dt (weekly)
-    dydt[3] = sigma * E - gamma * I - alpha * I;          // dI/dt (weekly)
+    dydt[3] = sigma * E - (gamma+alpha) * I;          // dI/dt (weekly)
     dydt[4] = gamma * I;                      // dR/dt (weekly)
     dydt[5] = alpha * I;
     dydt[6] = sigma * E;                      // Cumulative incidence (weekly)
@@ -45,13 +45,13 @@ parameters {
   array[N_countries] real<lower=0> sigma;      // Country-specific recovery rate (weekly)
   array[N_countries] real<lower=0> gamma;      // Country-specific progression rate (E to I, weekly)
   array[N_countries] real<lower=0> alpha;      // Country-specific death rate (weekly)
-  real<lower=0> phi_inv;                       // Negative binomial overdispersion
+  array[N_countries] real<lower=0> phi_inv;                       // Negative binomial overdispersion
 }
 
 transformed parameters {
   array[N_countries, n_weeks] vector[6] y;   // Weekly SEIR states for each country
   array[N_countries, n_weeks] real weekly_incidence; // Weekly incidence for each country
-  real<lower=0> phi = 1.0 / phi_inv;         // Negative binomial dispersion
+  array[N_countries] real<lower=0> phi = 1.0 / phi_inv;         // Negative binomial dispersion
   array[N_countries, n_weeks] real adjusted_incidence;
 
   // Solve ODE at weekly intervals with rescaled rates
@@ -60,11 +60,11 @@ transformed parameters {
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 6];         // Initial incidence
-    adjusted_incidence[c,1] = (reporting_rate * weekly_incidence[c,1])+0.00005;
+    adjusted_incidence[c,1] = (reporting_rate * weekly_incidence[c,1])+0.000001;
 
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 6] - y[c, w-1, 6];
-      adjusted_incidence[c, w] = (reporting_rate * weekly_incidence[c, w])+0.00005;
+      adjusted_incidence[c, w] = (reporting_rate * weekly_incidence[c, w])+0.000001;
     }
   }
 }
@@ -72,12 +72,12 @@ transformed parameters {
 model {
   // PRIORS (rescaled to weekly rates)
   for (p in 1:N_countries) {
-    beta[p] ~ lognormal(log(beta_values[p]), 0.5);    // Weekly beta = daily beta / 7
-    sigma[p] ~ lognormal(log(sigma_values[p]), 0.5);  // Weekly sigma = daily sigma / 7
-    gamma[p] ~ lognormal(log(gamma_values[p]), 0.5);  // Weekly gamma = daily gamma / 7
-    alpha[p] ~ lognormal(log(alpha_values[p]), 0.5);  // Weekly alpha = daily alpha / 7
+    beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
+    sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
+    gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
+    alpha[p] ~ lognormal(log(alpha_values[p]), 0.3);  // Weekly alpha = daily alpha / 7
+    phi_inv ~ exponential(5);
   }
-  phi_inv ~ exponential(2);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {

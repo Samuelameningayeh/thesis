@@ -17,7 +17,7 @@ functions {
       
       dydt[1] = -beta * I * S / N;
       dydt[2] = beta * I * S / N - sigma * E;
-      dydt[3] =  sigma * E - gamma * I - alpha * I;
+      dydt[3] =  sigma * E - (gamma+alpha) * I;
       dydt[4] =  gamma * I;
       dydt[5] =  alpha * I;
       dydt[6] = sigma * E; 
@@ -61,18 +61,18 @@ transformed parameters{
 }
 model {
     //priors
-    beta ~ lognormal(log(beta_value), 0.5);      // Infection rate prior
-    sigma ~ lognormal(log(sigma_value), 0.5);   // Prior mean: 10-day incubation period
-    gamma ~ lognormal(log(gamma_value), 0.5);   // Prior mean: 7-day infectious period 
-    alpha ~ lognormal(log(alpha_value), 0.5); 
-    phi_inv ~ exponential(2);
+    beta ~ lognormal(log(beta_value), 0.3);      // Infection rate prior
+    sigma ~ lognormal(log(sigma_value), 0.3);   // Prior mean: 10-day incubation period
+    gamma ~ lognormal(log(gamma_value), 0.3);   // Prior mean: 7-day infectious period 
+    alpha ~ lognormal(log(alpha_value), 0.3); 
+    phi_inv ~ exponential(5);
     //reporting_rate ~ beta(2, 2);
     
     //sampling distribution
     cases ~ neg_binomial_2(reporting_rate*incidence+0.000001, phi);
 }
 generated quantities {
-  real R0 = beta / (gamma - alpha);
+  real R0 = beta / (gamma + alpha);
   real recovery_time = 1 / gamma;
   real incubation_period = 1 / sigma;
 

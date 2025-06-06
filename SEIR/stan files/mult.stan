@@ -46,11 +46,7 @@ transformed parameters {
   array[N_countries, n_weeks] vector[5] y;   // Weekly SEIR states for each country
   array[N_countries, n_weeks] real weekly_incidence; // Weekly incidence for each country
   array[N_countries, n_weeks] real adjusted_incidence;
-  real<lower=0> phi;
-
-  for (c in 1:N_countries) {
-    phi[c] = 1.0 / phi_inv[c];
-  }
+  real<lower=0> phi = 1./phi_inv;
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {

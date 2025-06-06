@@ -34,7 +34,7 @@ functions {
 data {
   int<lower=1> N_patches;           // 3 (Guinea, Liberia, Sierra Leone)
   int<lower=1> n_weeks;             
-  vector[5*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
+  vector[4*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
   real t0;                         
   array[n_weeks] real t;            
   vector[N_patches] N;              // Population for each patch
@@ -79,7 +79,6 @@ model {
 
   sigma ~ lognormal(log(sigma_data), 0.5);
   gamma ~ lognormal(log(gamma_data), 0.5);
-  alpha ~ lognormal(log(alpha_data), 0.5);
   phi_inv ~ exponential(2);
 
   // Likelihood

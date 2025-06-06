@@ -2,7 +2,11 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plot_posterior_kde_grid(fit:any, parameters: list, n_cols: int, true_values: dict = None, save:str = None):
+def plot_posterior_kde_grid(fit:any, 
+                            parameters: list, 
+                            n_cols: int, 
+                            true_values: dict = None, 
+                            save:str = None):
     """
     Plot KDEs of posterior samples for given parameters from a CmdStanMCMC fit.
 

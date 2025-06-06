@@ -51,8 +51,12 @@ parameters {
 transformed parameters {
   array[N_countries, n_weeks] vector[6] y;   // Weekly SEIR states for each country
   array[N_countries, n_weeks] real weekly_incidence; // Weekly incidence for each country
-  array[N_countries] real<lower=0> phi = 1.0 / phi_inv;         // Negative binomial dispersion
   array[N_countries, n_weeks] real adjusted_incidence;
+  array[N_countries] real<lower=0> phi;
+
+  for (c in 1:N_countries) {
+    phi[c] = 1.0 / phi_inv[c];
+  }
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {
@@ -70,19 +74,20 @@ transformed parameters {
 }
 
 model {
+
   // PRIORS (rescaled to weekly rates)
   for (p in 1:N_countries) {
     beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
     sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
     gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
     alpha[p] ~ lognormal(log(alpha_values[p]), 0.3);  // Weekly alpha = daily alpha / 7
-    phi_inv ~ exponential(5);
+    phi_inv[p] ~ exponential(5);
   }
 
   // LIKELIHOOD
   for (p in 1:N_countries) {
     // Vectorized likelihood (weekly)
-    cases[p] ~ neg_binomial_2(adjusted_incidence[p], phi);
+    cases[p] ~ neg_binomial_2(adjusted_incidence[p], phi[p]);
   }
 }
 
@@ -99,6 +104,6 @@ generated quantities {
   }
 
   for (c in 1:N_countries) {
-    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
+    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi[c]);
   }
 }

@@ -5,30 +5,27 @@ functions {
     matrix beta_mat,               // coupling matrix B_pj [3,3]
     vector sigma,                  // sigma for each patch
     vector gamma,                  // gamma for each patch
-    vector alpha,
     vector N                       // population for each patch
   ) {
     int n_patches = 3;
-    vector[15] dydt;
+    vector[12] dydt;
     for (p in 1:n_patches) {
-      real S_p = y[5*(p-1)+1];
-      real E_p = y[5*(p-1)+2];
-      real I_p = y[5*(p-1)+3];
-      real R_p = y[5*(p-1)+4];
-      real D_p = y[5*(p-1)+5];
+      real S_p = y[4*(p-1)+1];
+      real E_p = y[4*(p-1)+2];
+      real I_p = y[4*(p-1)+3];
+      real R_p = y[4*(p-1)+4];
 
       // Force of infection from all patches
       real inf_sum = 0;
       for (j in 1:n_patches) {
-        real I_j = y[5*(j-1)+3];
+        real I_j = y[4*(j-1)+3];
         inf_sum += beta_mat[p, j] * S_p * I_j / N[j];
       }
 
-      dydt[5*(p-1)+1] = -inf_sum;                        // dS_p/dt
-      dydt[5*(p-1)+2] = inf_sum - sigma[p] * E_p;        // dE_p/dt
-      dydt[5*(p-1)+3] = sigma[p] * E_p - gamma[p] * I_p - alpha[p] * I_p; // dI_p/dt
-      dydt[5*(p-1)+4] = gamma[p] * I_p;                  // dR_p/dt
-      dydt[5*(p-1)+5] = alpha[p] * I_p
+      dydt[4*(p-1)+1] = -inf_sum;                        // dS_p/dt
+      dydt[4*(p-1)+2] = inf_sum - sigma[p] * E_p;        // dE_p/dt
+      dydt[4*(p-1)+3] = sigma[p] * E_p - gamma[p] * I_p; // dI_p/dt
+      dydt[4*(p-1)+4] = gamma[p] * I_p;                  // dR_p/dt
     }
     return dydt;
   }
@@ -37,7 +34,7 @@ functions {
 data {
   int<lower=1> N_patches;           // 3 (Guinea, Liberia, Sierra Leone)
   int<lower=1> n_weeks;             
-  vector[6*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
+  vector[5*N_patches] y0;           // Initial states for all patches [S0,E0,I0,R0,D0,...]
   real t0;                         
   array[n_weeks] real t;            
   vector[N_patches] N;              // Population for each patch
@@ -45,7 +42,6 @@ data {
   matrix[N_patches, N_patches] beta_data;   // Prior mean values for B_pj
   vector[N_patches] sigma_data;             // Prior mean values for sigma
   vector[N_patches] gamma_data;             // Prior mean values for gamma
-  vector[N_patches] alpha_data;             // Prior mean values for alpha
   real<lower=0, upper=1> reporting_rate;    
 }
 
@@ -53,7 +49,6 @@ parameters {
   matrix<lower=0>[N_patches, N_patches] beta_mat; // Transmission rates (to be estimated)
   vector<lower=0>[N_patches] sigma;              // Progression rates (to be estimated)
   vector<lower=0>[N_patches] gamma;              // Recovery rates (to be estimated)
-  vector<lower=0>[N_patches] alpha;              // death rates (to be estimated)
   real<lower=0> phi_inv;                         // Overdispersion
 }
 
@@ -63,15 +58,15 @@ transformed parameters {
   real<lower=0> phi = 1.0 / phi_inv;
   array[N_patches, n_weeks] real adjusted_incidence;
 
-  y = ode_rk45(seir_metapop, y0, t0, t, beta_mat, sigma, gamma, alpha, N);
+  y = ode_rk45(seir_metapop, y0, t0, t, beta_mat, sigma, gamma, N);
 
   for (p in 1:N_patches) {
     // Weekly incidence: number progressing E->I (new infections)
-    weekly_incidence[p, 1] = sigma[p] * y[1, 5*(p-1)+2];
-    adjusted_incidence[p, 1] = reporting_rate * weekly_incidence[p, 1] + 0.0001;
+    weekly_incidence[p, 1] = sigma[p] * y[1, 4*(p-1)+2];
+    adjusted_incidence[p, 1] = reporting_rate * weekly_incidence[p, 1] + 0.000001;
     for (w in 2:n_weeks) {
-      weekly_incidence[p, w] = sigma[p] * y[w-1, 5*(p-1)+2];
-      adjusted_incidence[p, w] = reporting_rate * weekly_incidence[p, w] + 0.0001;
+      weekly_incidence[p, w] = sigma[p] * y[w-1, 4*(p-1)+2];
+      adjusted_incidence[p, w] = reporting_rate * weekly_incidence[p, w] + 0.000001;
     }
   }
 }
@@ -102,7 +97,7 @@ generated quantities {
     // R0: sum all transmission rates from other patches to p, divided by gamma
     real beta_sum = 0;
     for (j in 1:N_patches) beta_sum += beta_mat[p, j];
-    R0[p] = beta_sum / (gamma[p] + alpha[p]);
+    R0[p] = beta_sum / gamma[p];
     recovery_time[p] = 1.0 / gamma[p];
     incubation_period[p] = 1.0 / sigma[p];
     pred_incidence[p] = neg_binomial_2_rng(adjusted_incidence[p], phi);

@@ -4,30 +4,27 @@ functions {
              real beta, 
              real sigma,
              real gamma,
-             real alpha,
              real N) {
 
-      vector[6] dydt;
+      vector[5] dydt;
 
       real S = y[1];
       real E = y[2];
       real I = y[3];
       real R = y[4];
-      real D = y[5];
       
       dydt[1] = -beta * I * S / N;
       dydt[2] = beta * I * S / N - sigma * E;
-      dydt[3] =  sigma * E - (gamma+alpha) * I;
+      dydt[3] =  sigma * E - gamma * I;
       dydt[4] =  gamma * I;
-      dydt[5] =  alpha * I;
-      dydt[6] = sigma * E; 
+      dydt[5] = sigma * E; 
       
       return dydt;
   }
 }
 data {
   int<lower=1>n_days;
-  vector[6] y0;
+  vector[5] y0;
   real t0;
   array[n_days] real t;
   int N;
@@ -35,7 +32,6 @@ data {
   real<lower=0> beta_value;
   real<lower=0> sigma_value;
   real<lower=0> gamma_value;
-  real<lower=0> alpha_value;
   real<lower=0,upper=1> reporting_rate;
 }
 
@@ -43,28 +39,26 @@ parameters {
   real<lower=0> sigma;
   real<lower=0> beta;
   real<lower=0> gamma;
-  real<lower=0> alpha;
   real<lower=0> phi_inv;
 }
 transformed parameters{
-  array[n_days] vector[6] y;
+  array[n_days] vector[5] y;
   vector[n_days] incidence;
   real<lower=0> phi = 1./phi_inv;
   
-  y = ode_rk45(seir, y0, t0, t, beta, sigma, gamma, alpha, N);
+  y = ode_rk45(seir, y0, t0, t, beta, sigma, gamma, N);
 
   //reporting_rate = 0.8;
 
-  incidence[1] = y[1, 6] - 0;
+  incidence[1] = y[1, 5] - 0;
   for (i in 2:n_days)
-    incidence[i] = y[i, 6] - y[i-1, 6];
+    incidence[i] = y[i, 5] - y[i-1, 5];
 }
 model {
     //priors
     beta ~ lognormal(log(beta_value), 0.3);      // Infection rate prior
     sigma ~ lognormal(log(sigma_value), 0.3);   // Prior mean: 10-day incubation period
     gamma ~ lognormal(log(gamma_value), 0.3);   // Prior mean: 7-day infectious period 
-    alpha ~ lognormal(log(alpha_value), 0.3); 
     phi_inv ~ exponential(5);
     //reporting_rate ~ beta(2, 2);
     
@@ -72,7 +66,7 @@ model {
     cases ~ neg_binomial_2(reporting_rate*incidence+0.000001, phi);
 }
 generated quantities {
-  real R0 = beta / (gamma + alpha);
+  real R0 = beta / gamma;
   real recovery_time = 1 / gamma;
   real incubation_period = 1 / sigma;
 

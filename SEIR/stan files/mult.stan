@@ -80,9 +80,9 @@ model {
     beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
     sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
     gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
-    alpha[p] ~ lognormal(log(alpha_values[p]), 0.3);  // Weekly alpha = daily alpha / 7
-    phi_inv[p] ~ exponential(5);
   }
+  alpha ~ lognormal(log(alpha_values[p]), 0.3);  // Weekly alpha = daily alpha / 7
+  phi_inv ~ exponential(5);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {

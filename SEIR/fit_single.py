@@ -59,7 +59,6 @@ for i, country in enumerate(countries):
 
     print(f'Running model fit for {country} at time {timestamp}...')
     fit = model.sample(data=seir_data,
-                       iter_warmup=500,
                        iter_sampling=1000,
                        chains=4,
                        seed=0)

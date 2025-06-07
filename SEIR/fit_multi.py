@@ -48,12 +48,11 @@ seir_data = {
 }
 
 # Fit the model
-print(f'Running model fit for at time {timestamp}...')
+print(f'Running model fit for All Patches at time {timestamp}...')
 model = CmdStanModel(stan_file = 'stan files/mult.stan')
 print(f'Done compiling...Now Sampling!')
 
 fit = model.sample(data=seir_data,
-                    iter_warmup=500,
                     iter_sampling=1000,
                     chains=4,
                     seed=0)

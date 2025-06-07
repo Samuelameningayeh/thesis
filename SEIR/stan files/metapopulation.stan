@@ -87,8 +87,8 @@ model {
 
 generated quantities {
   array[N_patches] real R0;
-  array[N_patches] real recovery_time;
-  array[N_patches] real incubation_period;
+  real recovery_time;
+  real incubation_period;
   array[N_patches, n_weeks] real pred_incidence;
 
   for (p in 1:N_patches) {
@@ -96,8 +96,8 @@ generated quantities {
     real beta_sum = 0;
     for (j in 1:N_patches) beta_sum += beta_mat[j];
     R0[p] = beta_sum / gamma;
-    recovery_time[p] = 1.0 / gamma;
-    incubation_period[p] = 1.0 / sigma;
+    recovery_time = 1.0 / gamma;
+    incubation_period = 1.0 / sigma;
     pred_incidence[p] = neg_binomial_2_rng(adjusted_incidence[p], phi);
   }
 }

@@ -69,10 +69,9 @@ model {
   for (p in 1:N_countries) {
     beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
   }
-  sigma[p] ~ lognormal(log(sigma_values), 0.3);  // Weekly sigma = daily sigma / 7
-  gamma[p] ~ lognormal(log(gamma_values), 0.3);  // Weekly gamma = daily gamma / 7
-
-  phi_inv ~ exponential(5);
+  sigma ~ lognormal(log(sigma_values), 0.3);  // Weekly sigma = daily sigma / 7
+  gamma ~ lognormal(log(gamma_values), 0.3);  // Weekly gamma = daily gamma / 7
+  phi_inv ~ exponential(2);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {
@@ -83,17 +82,15 @@ model {
 
 generated quantities {
   array[N_countries] real R0;   // Country-specific R0 (weekly)
-  array[N_countries] real recovery_time;        // Recovery time (weeks)
-  array[N_countries] real incubation_period;    // Incubation period (weeks)
+  real recovery_time;        // Recovery time (weeks)
+  real incubation_period;    // Incubation period (weeks)
   array[N_countries, n_weeks] real pred_incidence; // Predicted weekly cases
 
-  for (c in 1:N_countries) {
-    R0[c] = beta[c] / gamma;  // R0 based on weekly rates
-    recovery_time[c] = (1.0 / gamma);      // Weeks
-    incubation_period[c] = (1.0 / sigma);    // Weeks
-  }
+  recovery_time = (1.0 / gamma);      // Weeks
+  incubation_period = (1.0 / sigma);    // Weeks
 
   for (c in 1:N_countries) {
+    R0[c] = beta[c] / gamma;   // R0 based on weekly rates
     pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
   }
 }

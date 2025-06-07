@@ -63,7 +63,7 @@ model {
     //reporting_rate ~ beta(2, 2);
     
     //sampling distribution
-    cases ~ neg_binomial_2(reporting_rate*incidence+0.000001, phi);
+    cases ~ neg_binomial_2(fmax(reporting_rate*incidence, 0.000001), phi);
 }
 generated quantities {
   real R0 = beta / gamma;
@@ -71,5 +71,5 @@ generated quantities {
   real incubation_period = 1 / sigma;
 
   array[n_days] real pred_incidence;
-  pred_incidence = neg_binomial_2_rng(reporting_rate*incidence+0.000001, phi);
+  pred_incidence = neg_binomial_2_rng(fmax(reporting_rate*incidence, 0.000001), phi);
 }

@@ -56,10 +56,10 @@ transformed parameters{
 }
 model {
     //priors
-    beta ~ lognormal(log(beta_value), 0.3);      // Infection rate prior
-    sigma ~ lognormal(log(sigma_value), 0.3);   // Prior mean: 10-day incubation period
-    gamma ~ lognormal(log(gamma_value), 0.3);   // Prior mean: 7-day infectious period 
-    phi_inv ~ exponential(2);
+    beta ~ lognormal(log(beta_value), 0.5);      // Infection rate prior
+    sigma ~ lognormal(log(sigma_value), 0.5);   // Prior mean: 10-day incubation period
+    gamma ~ lognormal(log(gamma_value), 0.5);   // Prior mean: 7-day infectious period 
+    phi_inv ~ exponential(5);
     //reporting_rate ~ beta(2, 2);
     
     //sampling distribution

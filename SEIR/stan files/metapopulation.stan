@@ -62,10 +62,10 @@ transformed parameters {
 
   for (p in 1:N_patches) {
     // Weekly incidence: number progressing E->I (new infections)
-    weekly_incidence[p, 1] = sigma[p] * y[1, 4*(p-1)+2];
+    weekly_incidence[p, 1] = sigma * y[1, 4*(p-1)+2];
     adjusted_incidence[p, 1] = fmax((reporting_rate * weekly_incidence[p, 1]), 0.000001);
     for (w in 2:n_weeks) {
-      weekly_incidence[p, w] = sigma[p] * y[w-1, 4*(p-1)+2];
+      weekly_incidence[p, w] = sigma * y[w-1, 4*(p-1)+2];
       adjusted_incidence[p, w] = fmax((reporting_rate * weekly_incidence[p, w]), 0.000001);
     }
   }

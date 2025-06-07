@@ -50,15 +50,15 @@ transformed parameters {
 
   // Solve ODE at weekly intervals with rescaled rates
   for (c in 1:N_countries) {
-    y[c] = ode_rk45(seir, y0[c], t0, t, beta[c], sigma, gamma, N[c]);
+    y[c] = ode_bdf(seir, y0[c], t0, t, beta[c], sigma, gamma, N[c]);
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
-    adjusted_incidence[c,1] = fmax((reporting_rate * weekly_incidence[c,1]), 0.000001);
+    adjusted_incidence[c,1] = fmax((reporting_rate * weekly_incidence[c,1]), 0.00001);
 
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
-      adjusted_incidence[c, w] = fmax((reporting_rate * weekly_incidence[c, w]), 0.000001);
+      adjusted_incidence[c, w] = fmax((reporting_rate * weekly_incidence[c, w]), 0.00001);
     }
   }
 }

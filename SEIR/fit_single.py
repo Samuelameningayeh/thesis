@@ -13,12 +13,12 @@ df = pd.read_csv('Data/synthetic_dataset_no_coupling.csv')
 
 # Country-specific data and parameters
 countries = ['Guinea', 'Liberia', 'SierraLeone']
-# N = np.array([11.5e6, 4.5e6, 6.8e6])  # Population sizes
-N = np.array([1100000, 440000, 680000])
+N = np.array([11.5e6, 4.5e6, 6.8e6])  # Population sizes
+# N = np.array([1100000, 440000, 680000])
 
 beta = np.array([0.3, 0.4, 0.35])*7  # Transmission rate per week (R0 = beta/gamma)
 sigma = 1/8.5*7 #incubation rate per week
-gamma = 1/13*7   # Recovery rate per week
+gamma = 1/10*7   # Recovery rate per week
 phi = 10           # Negative binomial dispersion parameter
 reporting_rate = 1
 i0 = [10, 10, 10]  # Initial infected
@@ -60,9 +60,9 @@ for i, country in enumerate(countries):
 
     print(f'Running model fit for {country} at time {timestamp}...')
     fit = model.sample(data=seir_data,
-                       iter_sampling=1000,
+                       iter_sampling=2000,
                        chains=4,
-                       seed=10)
+                       seed=2)
 
     # Save the fit output with a memorable name
     output_dir = f'outputs/{country.lower()}_{timestamp}'

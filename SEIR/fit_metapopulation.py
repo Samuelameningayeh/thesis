@@ -15,17 +15,17 @@ weekly_coupling = df[['Guinea_Noise', 'Liberia_Noise', 'SierraLeone_Noise']]
 
 N = np.array([11.5e6, 4.5e6, 6.8e6]) 
 
-g0 = np.array([N[0]-10, 10, 10, 0])
-l0 = np.array([N[1]-10, 10, 1, 0])
-s0 = np.array([N[2]-10, 10, 1, 0])
+g0 = np.array([N[0]-20, 10, 10, 0])
+l0 = np.array([N[1]-11, 10, 1, 0])
+s0 = np.array([N[2]-11, 10, 1, 0])
 
 y0 = np.concatenate([g0, l0, s0]).flatten()
 
 ts = weekly_coupling.values.T
 
-beta = np.array([0.25, 0.27, 0.26])*7
-sigma = (1/5)*7            #incubation rate per week
-gamma = (1/6.6)*7  
+beta = np.array([0.3, 0.4, 0.35])*7
+sigma = (1/8.5)*7            #incubation rate per week
+gamma = (1/10)*7  
 
 phi = 10           # Negative binomial dispersion parameter
 # alpha = 0.05*7
@@ -56,9 +56,9 @@ model = CmdStanModel(stan_file = 'stan files/metapopulation.stan')
 print(f'Done compiling...Now Sampling!')
 
 fit = model.sample(data=seir_data,
-                    iter_sampling=1000,
+                    iter_sampling=2000,
                     chains=4,
-                    seed=0)
+                    seed=10)
 
 # Save the fit output with a memorable name
 output_dir = f'outputs/metapopulation_{timestamp}'

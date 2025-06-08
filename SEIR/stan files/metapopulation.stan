@@ -58,7 +58,7 @@ transformed parameters {
   real<lower=0> phi = 1.0 / phi_inv;
   array[N_patches, n_weeks] real adjusted_incidence;
 
-  y = ode_rk45(seir_metapop, y0, t0, t, beta_mat, sigma, gamma, N);
+  y = ode_bdf(seir_metapop, y0, t0, t, beta_mat, sigma, gamma, N);
 
   for (p in 1:N_patches) {
     // Weekly incidence: number progressing E->I (new infections)
@@ -78,7 +78,7 @@ model {
 
   sigma ~ lognormal(log(sigma_data), 0.5);
   gamma ~ lognormal(log(gamma_data), 0.5);
-  phi_inv ~ exponential(2);
+  phi_inv ~ exponential(5);
 
   // Likelihood
   for (p in 1:N_patches)

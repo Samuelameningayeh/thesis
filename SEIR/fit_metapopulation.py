@@ -23,9 +23,12 @@ y0 = np.concatenate([g0, l0, s0]).flatten()
 
 ts = weekly_coupling.values.T
 
-beta = np.array([0.3, 0.4, 0.35])*7
-sigma = (1/8.5)*7            #incubation rate per week
-gamma = (1/10)*7  
+beta = np.array([[0.3, 0.03, 0.02], 
+           [0.03, 0.4, 0.05], 
+           [0.02, 0.05, 0.35]])*7
+# beta = np.array([0.3, 0.4, 0.35])*7
+sigma = np.array([1/8.5, 1/8.5, 1/8.5])*7
+gamma = np.array([1/9, 1/7, 1/6])*7
 
 phi = 10           # Negative binomial dispersion parameter
 # alpha = 0.05*7
@@ -56,9 +59,9 @@ model = CmdStanModel(stan_file = 'stan files/metapopulation.stan')
 print(f'Done compiling...Now Sampling!')
 
 fit = model.sample(data=seir_data,
-                    iter_sampling=2000,
+                    iter_sampling=1000,
                     chains=4,
-                    seed=10)
+                    seed=0)
 
 # Save the fit output with a memorable name
 output_dir = f'outputs/metapopulation_{timestamp}'

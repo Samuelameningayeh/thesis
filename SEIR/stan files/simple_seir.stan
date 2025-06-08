@@ -36,15 +36,15 @@ data {
 }
 
 parameters {
-  real<lower=0> sigma;
-  real<lower=0> beta;
-  real<lower=0> gamma;
-  real<lower=0> phi_inv;
+  real<lower=1e-5> sigma;
+  real<lower=1e-5> beta;
+  real<lower=1e-5> gamma;
+  real<lower=1e-5> phi_inv;
 }
 transformed parameters{
   array[n_days] vector[5] y;
   vector[n_days] incidence;
-  real<lower=0> phi = 1./phi_inv;
+  real<lower=1e-5> phi = 1./phi_inv;
   
   y = ode_rk45(seir, y0, t0, t, beta, sigma, gamma, N);
 
@@ -63,7 +63,7 @@ model {
     //reporting_rate ~ beta(2, 2);
     
     //sampling distribution
-    cases ~ neg_binomial_2(fmax(reporting_rate*incidence, 0.00001), phi);
+    cases ~ neg_binomial_2(fmax(reporting_rate*incidence, 1e-8), phi);
 }
 generated quantities {
   real R0 = beta / gamma;
@@ -71,5 +71,5 @@ generated quantities {
   real incubation_period = 1 / sigma;
   array[n_days] real pred_incidence;
   
-  pred_incidence = neg_binomial_2_rng(fmax(reporting_rate*incidence, 0.00001), phi);
+  pred_incidence = neg_binomial_2_rng(fmax(reporting_rate*incidence, 1e-8), phi);
 }

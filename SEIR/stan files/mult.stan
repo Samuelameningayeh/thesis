@@ -36,10 +36,10 @@ data {
 }
 
 parameters {
-  array[N_countries] real<lower=1e-5> beta;       // Country-specific transmission rates (weekly)
-  array[N_countries] real<lower=1e-5> sigma;      // Country-specific recovery rate (weekly)
-  array[N_countries] real<lower=1e-5> gamma;      // Country-specific progression rate (E to I, weekly)
-  real<lower=1e-5> phi_inv;                       // Negative binomial overdispersion
+  array[N_countries] real<lower=0> beta;       // Country-specific transmission rates (weekly)
+  array[N_countries] real<lower=0> sigma;      // Country-specific recovery rate (weekly)
+  array[N_countries] real<lower=0> gamma;      // Country-specific progression rate (E to I, weekly)
+  real<lower=1e-4> phi_inv;                       // Negative binomial overdispersion
 }
 
 transformed parameters {
@@ -54,11 +54,11 @@ transformed parameters {
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
-    adjusted_incidence[c,1] = fmax((reporting_rate * weekly_incidence[c,1]), 1e-8);
+    adjusted_incidence[c,1] = fmax((reporting_rate * weekly_incidence[c,1]), 1e-4);
 
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
-      adjusted_incidence[c, w] = fmax((reporting_rate * weekly_incidence[c, w]), 1e-8);
+      adjusted_incidence[c, w] = fmax((reporting_rate * weekly_incidence[c, w]), 1e-4);
     }
   }
 }
@@ -67,11 +67,11 @@ model {
 
   // PRIORS (rescaled to weekly rates)
   for (p in 1:N_countries) {
-    beta[p] ~ lognormal(log(beta_values[p]), 0.5);    // Weekly beta = daily beta / 7
-    sigma[p] ~ lognormal(log(sigma_values[p]), 0.5);  // Weekly sigma = daily sigma / 7
-    gamma[p] ~ lognormal(log(gamma_values[p]), 0.5);  // Weekly gamma = daily gamma / 7
+    beta[p] ~ lognormal(log(beta_values[p]), 0.3);    // Weekly beta = daily beta / 7
+    sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
+    gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
   }
-  phi_inv ~ exponential(5);
+  phi_inv ~ exponential(3);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {

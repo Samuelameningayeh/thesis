@@ -70,9 +70,11 @@ transformed parameters {
 
 model {
   // Priors centered on data
-  for (p in 1:N_patches)
-    for (j in 1:N_patches)
+  for (p in 1:N_patches){
+    for (j in 1:N_patches){
       beta_mat[p, j] ~ lognormal(log(beta_data[p, j]), 0.5);
+    }
+  }
   sigma ~ lognormal(log(sigma_data), 0.5);
   gamma ~ lognormal(log(gamma_data), 0.5);
   phi_inv ~ exponential(5);

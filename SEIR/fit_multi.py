@@ -27,7 +27,7 @@ reporting_rate = 1
 # Define initial conditions
 g0 = [N[0]-20, 10, 10, 0, 10]
 l0 = [N[1]-11, 1, 10, 0, 10]
-s0 = [N[2]-11, 1, 10, 0, 10] 
+s0 = [N[2]-11, 1, 10, 0, 10]
 y0 = [g0, l0, s0]
 
 # Generate timestamp for uniqueness

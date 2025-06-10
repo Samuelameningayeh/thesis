@@ -26,6 +26,8 @@ ts = weekly_coupling.values.T
 beta = np.array([[0.3, 0.03, 0.02], 
            [0.03, 0.4, 0.05], 
            [0.02, 0.05, 0.35]])*7
+
+
 # beta = np.array([0.3, 0.4, 0.35])*7
 sigma = np.array([1/8.5, 1/8.5, 1/8.5])*7
 gamma = np.array([1/9, 1/7, 1/6])*7

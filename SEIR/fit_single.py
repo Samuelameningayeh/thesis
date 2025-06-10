@@ -17,9 +17,9 @@ N = np.array([11.5e6, 4.5e6, 6.8e6])  # Population sizes
 # N = np.array([1100000, 440000, 680000])
 
 beta = np.array([0.3, 0.4, 0.35])*7  # Transmission rate per week (R0 = beta/gamma)
-sigma = 1/8.5*7 #incubation rate per week
-gamma = 1/10*7   # Recovery rate per week
-phi = 10           # Negative binomial dispersion parameter
+sigma = np.array([1/8.5, 1/8.5, 1/8.5])*7
+gamma = np.array([1/9, 1/7, 1/6])*7  # Recovery rate per week
+phi = 10      # Negative binomial dispersion parameter
 reporting_rate = 1
 i0 = [10, 10, 10]  # Initial infected
 e0 = [10, 10, 10]    # Initial exposed

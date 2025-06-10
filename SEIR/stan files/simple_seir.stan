@@ -56,14 +56,14 @@ transformed parameters{
 }
 model {
     //priors
-    beta ~ lognormal(log(beta_value), 0.3);      // Infection rate prior
-    sigma ~ lognormal(log(sigma_value), 0.3);   // Prior mean: 10-day incubation period
-    gamma ~ lognormal(log(gamma_value), 0.3);   // Prior mean: 7-day infectious period 
+    beta ~ lognormal(log(beta_value), 0.5);      // Infection rate prior
+    sigma ~ lognormal(log(sigma_value), 0.5);   // Prior mean: 10-day incubation period
+    gamma ~ lognormal(log(gamma_value), 0.5);   // Prior mean: 7-day infectious period 
     phi_inv ~ exponential(5);
     //reporting_rate ~ beta(2, 2);
     
     //sampling distribution
-    cases ~ neg_binomial_2(fmax(reporting_rate*incidence, 1e-5), phi);
+    cases ~ neg_binomial_2(reporting_rate*incidence, phi);
 }
 generated quantities {
   real R0 = beta / gamma;
@@ -71,5 +71,5 @@ generated quantities {
   real incubation_period = 1 / sigma;
   array[n_days] real pred_incidence;
   
-  pred_incidence = neg_binomial_2_rng(fmax(reporting_rate*incidence, 1e-5), phi);
+  pred_incidence = neg_binomial_2_rng(reporting_rate*incidence, phi);
 }

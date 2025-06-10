@@ -54,11 +54,11 @@ transformed parameters {
     
     // Compute weekly incidence
     weekly_incidence[c, 1] = y[c, 1, 5];         // Initial incidence
-    adjusted_incidence[c,1] = fmax((reporting_rate * weekly_incidence[c,1]), 1e-4);
+    adjusted_incidence[c,1] = (reporting_rate * weekly_incidence[c,1]+0.00001);
 
     for (w in 2:n_weeks) {
       weekly_incidence[c, w] = y[c, w, 5] - y[c, w-1, 5];
-      adjusted_incidence[c, w] = fmax((reporting_rate * weekly_incidence[c, w]), 1e-4);
+      adjusted_incidence[c, w] = (reporting_rate * weekly_incidence[c, w]+0.00001);
     }
   }
 }
@@ -71,12 +71,14 @@ model {
     sigma[p] ~ lognormal(log(sigma_values[p]), 0.3);  // Weekly sigma = daily sigma / 7
     gamma[p] ~ lognormal(log(gamma_values[p]), 0.3);  // Weekly gamma = daily gamma / 7
   }
-  phi_inv ~ exponential(3);
+  phi_inv ~ exponential(5);
 
   // LIKELIHOOD
   for (p in 1:N_countries) {
     // Vectorized likelihood (weekly)
-    cases[p] ~ neg_binomial_2(adjusted_incidence[p], phi);
+    for (i in 1:N_countries){
+    cases[p, i] ~ neg_binomial_2(adjusted_incidence[p, i], phi);
+  }
   }
 }
 
@@ -91,6 +93,9 @@ generated quantities {
     recovery_time[c] = 1.0 / gamma[c];      // Weeks
     incubation_period[c] = 1.0 / sigma[c];    // Weeks
 
-    pred_incidence[c] = neg_binomial_2_rng(adjusted_incidence[c], phi);
+
+    for (i in 1:N_countries){
+      pred_incidence[c, i] = neg_binomial_2_rng(adjusted_incidence[c, i], phi);
+    }
   }
 }

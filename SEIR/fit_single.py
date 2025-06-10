@@ -18,7 +18,7 @@ N = np.array([11.5e6, 4.5e6, 6.8e6])  # Population sizes
 
 beta = np.array([0.3, 0.4, 0.35])*7  # Transmission rate per week (R0 = beta/gamma)
 sigma = np.array([1/8.5, 1/8.5, 1/8.5])*7
-gamma = np.array([1/9, 1/7, 1/6])*7  # Recovery rate per week
+gamma = np.array([1/13, 1/12, 1/10])*7  # Recovery rate per week
 phi = 10      # Negative binomial dispersion parameter
 reporting_rate = 1
 i0 = [10, 10, 10]  # Initial infected
@@ -60,7 +60,7 @@ for i, country in enumerate(countries):
 
     print(f'Running model fit for {country} at time {timestamp}...')
     fit = model.sample(data=seir_data,
-                       iter_sampling=2000,
+                       iter_sampling=1000,
                        chains=4,
                        seed=2)
 

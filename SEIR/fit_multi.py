@@ -26,8 +26,8 @@ reporting_rate = 1
 
 # Define initial conditions
 g0 = [N[0]-20, 10, 10, 0, 10]
-l0 = [N[1]-11, 1, 10, 0, 10]
-s0 = [N[2]-11, 1, 10, 0, 10]
+l0 = [N[1]-2, 1, 1, 0, 1]
+s0 = [N[2]-2, 1, 1, 0, 1]
 y0 = [g0, l0, s0]
 
 # Generate timestamp for uniqueness
@@ -59,6 +59,7 @@ print(f'\nDone compiling...Now Sampling!')
 
 fit = model.sample(data=seir_data,
                     iter_sampling=1000,
+                    parallel_chains=True,
                     chains=4,
                     seed=0)
 

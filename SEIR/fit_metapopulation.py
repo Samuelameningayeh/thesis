@@ -16,8 +16,8 @@ weekly_coupling = df[['Guinea_Noise', 'Liberia_Noise', 'SierraLeone_Noise']]
 N = np.array([11.5e6, 4.5e6, 6.8e6]) 
 
 g0 = np.array([N[0]-20, 10, 10, 0])
-l0 = np.array([N[1]-11, 10, 1, 0])
-s0 = np.array([N[2]-11, 10, 1, 0])
+l0 = np.array([N[1]-11, 1, 10, 0])
+s0 = np.array([N[2]-11, 1, 10, 0])
 
 y0 = np.concatenate([g0, l0, s0]).flatten()
 
@@ -27,10 +27,9 @@ beta = np.array([[0.3, 0.03, 0.02],
            [0.03, 0.4, 0.05], 
            [0.02, 0.05, 0.35]])*7
 
-
 # beta = np.array([0.3, 0.4, 0.35])*7
 sigma = np.array([1/8.5, 1/8.5, 1/8.5])*7
-gamma = np.array([1/9, 1/7, 1/6])*7
+gamma = np.array([1/9, 1/6.7, 1/6])*7
 
 phi = 10           # Negative binomial dispersion parameter
 # alpha = 0.05*7
@@ -62,6 +61,7 @@ print(f'Done compiling...Now Sampling!')
 
 fit = model.sample(data=seir_data,
                     iter_sampling=1000,
+                    parallel_chains=True,
                     chains=4,
                     seed=0)
 

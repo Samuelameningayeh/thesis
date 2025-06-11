@@ -44,17 +44,17 @@ data {
   real<lower=0, upper=1> reporting_rate;
 }
 parameters {
-  matrix<lower=1e-5>[N_patches, N_patches] beta_mat;
-  vector<lower=1e-5>[N_patches] sigma;
-  vector<lower=1e-5>[N_patches] gamma;
-  real<lower=1e-5> phi_inv;
+  matrix<lower=0>[N_patches, N_patches] beta_mat;
+  vector<lower=0>[N_patches] sigma;
+  vector<lower=0>[N_patches] gamma;
+  real<lower=0> phi_inv;
 }
 
 transformed parameters {
   array[n_weeks] vector[4*N_patches] y;
   array[N_patches, n_weeks] real weekly_incidence;
   array[N_patches, n_weeks] real adjusted_incidence;
-  real<lower=1e-5> phi = 1.0 / phi_inv;
+  real<lower=0> phi = 1.0 / phi_inv;
 
   y = ode_rk45(seir_metapop, y0, t0, t, beta_mat, sigma, gamma, N);
 

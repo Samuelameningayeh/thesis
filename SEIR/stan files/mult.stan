@@ -39,7 +39,7 @@ parameters {
   array[N_countries] real<lower=0> beta;       // Country-specific transmission rates (weekly)
   array[N_countries] real<lower=0> sigma;      // Country-specific recovery rate (weekly)
   array[N_countries] real<lower=0> gamma;      // Country-specific progression rate (E to I, weekly)
-  real<lower=1e-4> phi_inv;                       // Negative binomial overdispersion
+  real<lower=0> phi_inv;                      // Negative binomial overdispersion
 }
 
 transformed parameters {

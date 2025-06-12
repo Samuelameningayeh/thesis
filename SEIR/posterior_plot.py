@@ -33,7 +33,7 @@ def plot_posterior_kde_grid(fit,
     n_params = len(parameters)
     n_rows = math.ceil(n_params / n_cols)
 
-    fig, ax = plt.subplots(n_rows, n_cols, figsize=(7 * n_cols, 4 * n_rows))
+    fig, ax = plt.subplots(n_rows, n_cols, figsize=(6 * n_cols, 3 * n_rows))
     ax = ax.flatten()  # flatten axes for easy indexing
 
     for i, param in enumerate(parameters):
@@ -43,8 +43,10 @@ def plot_posterior_kde_grid(fit,
                 ax[i].axvline(x=true_values[param], color='r', linestyle='--', label='True value')
                 ax[i].legend()
             ax[i].set_ylabel('Density', fontsize=15)
-            ax[i].set_xlabel(f'{param}({symbol_dict.get(param)})' if param in symbol_dict else param, fontsize=15)
+            ax[i].set_xlabel(f'{param}({symbol_dict.get(param)})' if param in symbol_dict else param, fontsize=18)
             ax[i].set_title(f'Posterior of {symbol_dict.get(param)}' if param in symbol_dict else param, fontsize=18)
+            ax[i].tick_params(axis='x', labelsize=15)  # Set font size for x-axis ticks
+            ax[i].tick_params(axis='y', labelsize=15)
 
         else:
             ax[i].text(0.5, 0.5, f"{param} not found", ha='center', va='center')

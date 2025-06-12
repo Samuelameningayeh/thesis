@@ -17,6 +17,16 @@ def plot_posterior_kde_grid(fit,
         n_cols (int): Number of subplot columns.
         true_values (dict, optional): Dict mapping param names to true values for reference lines.
     """
+
+    symbol_dict = {
+        "beta[1]": r"$\beta_1$", "beta[2]": r"$\beta_2$", "beta[3]": r"$\beta_3$",
+        "sigma[1]": r"$\sigma_1$", "sigma[2]": r"$\sigma_2$", "sigma[3]": r"$\sigma_3$",
+        "gamma[1]": r"$\gamma_1$", "gamma[2]": r"$\gamma_2$", "gamma[3]": r"$\gamma_3$",
+        "R0[1]": r"$R_{0,1}$", "R0[2]": r"$R_{0,2}$", "R0[3]": r"$R_{0,3}$",
+        "sigma": r"$\sigma$", "gamma": r"$\gamma$", "R0": r"$R_{0}$",
+        "beta": r"$\beta$"
+    }
+    
     posterior_samples = fit.draws_pd()
     
     # Dynamically calculate the number of rows
@@ -32,9 +42,10 @@ def plot_posterior_kde_grid(fit,
             if true_values and param in true_values:
                 ax[i].axvline(x=true_values[param], color='r', linestyle='--', label='True value')
                 ax[i].legend()
-            ax[i].set_xlabel(param)
-            ax[i].set_ylabel('Density')
-            ax[i].set_title(f'Posterior of {param}')
+            ax[i].set_ylabel('Density', fontsize=15)
+            ax[i].set_xlabel(f'{param}({symbol_dict.get(param)})' if param in symbol_dict else param, fontsize=15)
+            ax[i].set_title(f'Posterior of {symbol_dict.get(param)}' if param in symbol_dict else param, fontsize=18)
+
         else:
             ax[i].text(0.5, 0.5, f"{param} not found", ha='center', va='center')
             ax[i].axis('off')

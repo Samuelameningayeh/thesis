@@ -60,10 +60,10 @@ transformed parameters {
 
   for (p in 1:N_patches) {
     weekly_incidence[p, 1] = sigma[p] * y[1, 4*(p-1)+2];
-    adjusted_incidence[p, 1] = reporting_rate * weekly_incidence[p, 1];
+    adjusted_incidence[p, 1] = reporting_rate * weekly_incidence[p, 1]+0.00001;
     for (w in 2:n_weeks) {
       weekly_incidence[p, w] = sigma[p] * y[w-1, 4*(p-1)+2];
-      adjusted_incidence[p, w] = reporting_rate * weekly_incidence[p, w];
+      adjusted_incidence[p, w] = reporting_rate * weekly_incidence[p, w]+0.00001;
     }
   }
 }
